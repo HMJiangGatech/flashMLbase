@@ -18,7 +18,7 @@ namespace fmlbase{
     public:
         SolverBase() = default;
         explicit SolverBase(const utils::FmlParam &param);
-        virtual void train(bool verbose) = 0;
+        virtual void train() = 0;
         void saveVecParam(const VectorXd &parameter);
         void saveMatParam(const MatrixXd &parameter);
 
@@ -28,6 +28,7 @@ namespace fmlbase{
         VectorXd* response_vec;
         int ntrain_sample;
         int nfeature;
+        bool verbose;
     };
 } // namespace fmlbase
 

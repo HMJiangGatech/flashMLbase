@@ -15,6 +15,10 @@ namespace fmlbase{
         if (ntrain_sample != design_mat->rows())
             throw std::runtime_error("Size of input data and label foes not match\n");
         nfeature = design_mat->cols();
+        if(param.hasArg("verbose"))
+            verbose = param.getBoolArg("verbose");
+        else
+            verbose = false;
     }
 
     void SolverBase::saveMatParam(const MatrixXd &parameter) {

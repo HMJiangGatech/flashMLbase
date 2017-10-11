@@ -60,7 +60,7 @@ namespace fmlbase{
         thetas.emplace_back(theta);
     }
 
-    void PIS2TASQRTLassoSolver::train(bool verbose) {
+    void PIS2TASQRTLassoSolver::train() {
         for (int i = 1; i < niter; ++i) {
             if(verbose)
                 std::cout << "Outer Loop: " << i << std::endl;
@@ -72,12 +72,10 @@ namespace fmlbase{
             else
                 k_epsilon = epsilon;
             double k_stepsize = stepsize_max;
-            ISTA(k_stepsize, k_epsilon, verbose);
-            // ISTA_naive(k_epsilon);
+            ISTA(k_stepsize, k_epsilon);
             thetas.emplace_back(theta);
             if(verbose)
             {
-                std::cout << "Outer Loop: " << i << std::endl;
                 std::cout   << "  error: "<< k_epsilon
                             << "  obj val: "<< obj_value()
                             << "  loss val: "<< loss_value()
@@ -87,7 +85,7 @@ namespace fmlbase{
         }
     }
 
-    void PIS2TASQRTLassoSolver::ISTA(double k_stepsize, double k_epsilon, bool verbose) {
+    void PIS2TASQRTLassoSolver::ISTA(double k_stepsize, double k_epsilon) {
         int t = 0;
         double maxkss = -1;
         while(++t != 0)
@@ -104,10 +102,7 @@ namespace fmlbase{
                 tau = lambda/tilde_stepsize;
                 temp_theta = *theta - grad/tilde_stepsize;
                 temp_theta = temp_theta.cwiseSign().cwiseProduct((temp_theta.array().abs() - tau).max(0).matrix());
-                double q_val = 0;
-                auto diff_theta = (temp_theta.array() - theta->array()).matrix();
-                q_val = loss_value() + grad.transpose()*diff_theta + 0.5*tilde_stepsize*diff_theta.squaredNorm()
-                        + lambda * temp_theta.cwiseAbs().sum();
+                double q_val = this->q_value(temp_theta,grad,tilde_stepsize);
                 //std::cout <<"\t\tobj val :" << obj_value(&temp_theta) << " quadratic approximation: " << q_val<<std::endl;
                 if (obj_value(&temp_theta) < q_val)
                     tilde_stepsize *= 0.5;
@@ -142,60 +137,6 @@ namespace fmlbase{
         }
         if(verbose)
             std::cout<<"  max stepsize: "<< maxkss<<std::endl;
-    }
-    void PIS2TASQRTLassoSolver::ISTA_naive(double k_epsilon, bool verbose) {
-        int t = 0;
-        while(++t != 0)
-        {
-            VectorXd grad;
-            loss_grad(grad);
-            double tau;
-
-            // calculate initial stepsize
-            double k_stepsize = this->hessian().norm();
-
-
-            // backtracking line search.
-            double tilde_stepsize;
-            tilde_stepsize = k_stepsize;
-            VectorXd temp_theta(nfeature);
-            while (true){
-                tau = lambda/tilde_stepsize;
-                temp_theta = *theta - grad/tilde_stepsize;
-                temp_theta = temp_theta.cwiseSign().cwiseProduct((temp_theta.array().abs() - tau).max(0).matrix());
-                double q_val = 0;
-                auto diff_theta = (temp_theta.array() - theta->array()).matrix();
-                q_val = loss_value() + grad.transpose()*diff_theta + 0.5*tilde_stepsize*diff_theta.squaredNorm()
-                        + lambda * temp_theta.cwiseAbs().sum();
-                if (obj_value(&temp_theta) < q_val)
-                    tilde_stepsize *= 0.5;
-                else
-                    break;
-            }
-            // update theta
-            k_stepsize = std::min(tilde_stepsize*2, k_stepsize);
-
-            tau = lambda/k_stepsize;
-            temp_theta = *theta - grad/k_stepsize;
-            temp_theta = temp_theta.cwiseSign().cwiseProduct((temp_theta.array().abs() - tau).max(0).matrix());
-            *theta = temp_theta;
-
-            // check stopping criteria
-            obj_grad(grad);
-            grad = grad.cwiseAbs();
-            grad = (grad.array() - (1 - theta->cwiseSign().cwiseAbs().array()) * lambda).matrix();
-            double omega = grad.maxCoeff();
-            if(verbose)
-                std::cout << "  \tMiddle Loop: " << t
-                          << "  AKKT:" << omega
-                          << "  Desired Precision: " << k_epsilon
-                          << "  k_stepsize: "<< k_stepsize
-                          << "  obj val: "<< obj_value()
-                          << "  loss val: "<< loss_value()
-                          << std::endl;
-            if(omega <= k_epsilon)
-                break;
-        }
     }
 
     void PIS2TASQRTLassoSolver::savetheta() {

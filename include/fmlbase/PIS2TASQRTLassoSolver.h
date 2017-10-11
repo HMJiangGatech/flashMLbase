@@ -19,7 +19,16 @@ namespace fmlbase{
     public:
         explicit PIS2TASQRTLassoSolver(const utils::FmlParam &param);
         ~PIS2TASQRTLassoSolver();
-        void reinitialize();
+        virtual void reinitialize();
+
+        // return the value of q function
+        inline double q_value(const VectorXd &temp_theta, const VectorXd &grad, const double &tilde_stepsize){
+            double q_val;
+            auto diff_theta = (temp_theta.array() - theta->array()).matrix();
+            q_val = loss_value() + grad.transpose()*diff_theta + 0.5*tilde_stepsize*diff_theta.squaredNorm()
+                    + lambda * temp_theta.cwiseAbs().sum();
+            return q_val;
+        }
 
         // return the value of loss function
         virtual inline double loss_value(VectorXd *theta_t){
@@ -31,11 +40,6 @@ namespace fmlbase{
             double objval;
             objval = ((*response_vec) - (*design_mat)*(*theta)).norm() / sqrt(1.*ntrain_sample);
             return objval;
-        }
-
-        // return the value of q function
-        virtual inline double q_value(VectorXd *diff_theta){
-
         }
 
         // return the value of objective function
@@ -83,10 +87,8 @@ namespace fmlbase{
             return hessianMat;
         }
 
-        void train(bool verbose) override;
-        void ISTA(double k_stepsize, double k_epsilon, bool verbose = false);
-        // recompute hessian matrix for the step size each time
-        void ISTA_naive(double k_epsilon, bool verbose = false);
+        void train() override;
+        virtual void ISTA(double k_stepsize, double k_epsilon);
 
 
         VectorXd predict(int lambdaIdx = -1); // for training data
@@ -107,7 +109,7 @@ namespace fmlbase{
         }
         void savetheta();
 
-    protected:
+    public:
         VectorXd* theta;                // The model parameter.
         double lambda;                  // The regularization parameter
         int niter;                      // The number of iterations

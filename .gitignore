@@ -44,5 +44,5 @@ fmlbase.exe
 !eigen
 
 #ignore large data
-\Tasks\Synthetic\*.csv
 *.log
+Tasks/Synthetic/*.csv
