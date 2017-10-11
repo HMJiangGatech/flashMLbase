@@ -70,7 +70,7 @@ namespace fmlbase{
             auto residue = ((*design_mat)*(*theta_t) - (*response_vec));
             grad = (*design_mat).transpose()* residue;
             grad /= sqrt(1.*ntrain_sample)*residue.norm();
-            grad += lambda*theta->cwiseSign();
+            grad += lambda*theta_t->cwiseSign();
         }
         virtual inline void obj_grad(VectorXd &grad){
             auto residue = ((*design_mat)*(*theta) - (*response_vec));
