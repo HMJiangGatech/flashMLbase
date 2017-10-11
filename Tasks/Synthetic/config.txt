@@ -1,0 +1,16 @@
+# all have to be lower case. 
+
+traindata = synthetic_data.csv
+trainlebel = synthetic_label.csv
+testdata = synthetic_data_test.csv
+testlabel = synthetic_label_test.csv
+validationdata = synthetic_data_val.csv
+validationlabel = synthetic_label_val.csv
+inputformat = csv
+savepath_theta = estimated_theta.csv
+outputformat = csv
+algorithm = sqrtlasso
+epsilon = 0.00001
+niter = 50
+sigma = 0.05
+verbose = 1         #0 or 1
