@@ -33,9 +33,9 @@ void runCLITask(const std::string &task_path)
     fmlbase::utils::readCsvVec(trueTheta, param.getStrArg("rootpath")+"/"+param.getStrArg("truetheta"));
 
     for (int i = 0; i < 1; ++i) {
-        solver.reinitialize();
+        solver2.reinitialize();
         auto begin = std::chrono::steady_clock::now();
-        solver.train();
+        solver2.train();
         auto end = std::chrono::steady_clock::now();
         auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
         std::cout<<i<<"th trail, training time (/s): "<<diff<<std::endl;
@@ -58,7 +58,7 @@ void runCLITask(const std::string &task_path)
 //    fmlbase::utils::readCsvVec(valY,param.getStrArg("rootpath")+"/"+param.getStrArg("validationlabel"));
 //    int optIdx = solver.validate(*valX,*valY);
 //
-    solver.savetheta();
+    solver2.savetheta();
 }
 
 int main(int argc, const char * argv[])

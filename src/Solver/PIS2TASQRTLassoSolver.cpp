@@ -98,6 +98,7 @@ namespace fmlbase{
             double tilde_stepsize;
             tilde_stepsize = k_stepsize;
             VectorXd temp_theta(nfeature);
+            bool exitflag1 = false, exitflag2 = false;
             while (true){
                 tau = lambda/tilde_stepsize;
                 temp_theta = *theta - grad/tilde_stepsize;
