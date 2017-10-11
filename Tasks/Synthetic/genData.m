@@ -19,15 +19,15 @@ csvwrite('synthetic_label.csv',y)
 csvwrite('True_Theta.csv',beta')
 
 
-z = mvnrnd(mu,var, n);
-y = z*beta + sigma*randn(n,1);
-data = [z y];
-csvwrite('synthetic_data_val.csv',z)
-csvwrite('synthetic_label_val.csv',y)
-
-n = 10000;
-z = mvnrnd(mu,var, n);
-y = z*beta + sigma*randn(n,1);
-data = [z y];
-csvwrite('synthetic_data_test.csv',z)
-csvwrite('synthetic_label_test.csv',y)
+% z = mvnrnd(mu,var, n);
+% y = z*beta + sigma*randn(n,1);
+% data = [z y];
+% csvwrite('synthetic_data_val.csv',z)
+% csvwrite('synthetic_label_val.csv',y)
+% 
+% n = 10000;
+% z = mvnrnd(mu,var, n);
+% y = z*beta + sigma*randn(n,1);
+% data = [z y];
+% csvwrite('synthetic_data_test.csv',z)
+% csvwrite('synthetic_label_test.csv',y)

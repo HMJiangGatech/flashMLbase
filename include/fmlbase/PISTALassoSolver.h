@@ -22,24 +22,24 @@ namespace fmlbase{
         // return the value of loss function
         inline double loss_value(VectorXd *theta_t) override {
             double objval;
-            objval = ((*response_vec) - (*design_mat)*(*theta_t)).squaredNorm() / (1.*ntrain_sample);
+            objval = ((*response_vec) - (*design_mat)*(*theta_t)).squaredNorm() / (2.*ntrain_sample);
             return objval;
         }
         inline double loss_value() override {
             double objval;
-            objval = ((*response_vec) - (*design_mat)*(*theta)).squaredNorm() / (1.*ntrain_sample);
+            objval = ((*response_vec) - (*design_mat)*(*theta)).squaredNorm() / (2.*ntrain_sample);
             return objval;
         }
 
         // return the value of objective function
         inline double obj_value(VectorXd *theta_t) override {
             double objval;
-            objval = ((*response_vec) - (*design_mat)*(*theta_t)).squaredNorm() / (1.*ntrain_sample) + lambda*(*theta_t).cwiseAbs().sum();
+            objval = ((*response_vec) - (*design_mat)*(*theta_t)).squaredNorm() / (2.*ntrain_sample) + lambda*(*theta_t).cwiseAbs().sum();
             return objval;
         }
         inline double obj_value() override {
             double objval;
-            objval = ((*response_vec) - (*design_mat)*(*theta)).squaredNorm() / (1.*ntrain_sample) + lambda*(*theta).cwiseAbs().sum();
+            objval = ((*response_vec) - (*design_mat)*(*theta)).squaredNorm() / (2.*ntrain_sample) + lambda*(*theta).cwiseAbs().sum();
             return objval;
         }
 
@@ -75,8 +75,8 @@ namespace fmlbase{
             return *this->hessianMat;
         }
 
-        void train() override;
-        void ISTA(double k_stepsize, double k_epsilon) override;
+//        void train() override;
+//        void ISTA(double k_stepsize, double k_epsilon) override;
 
     private:
         MatrixXd *hessianMat;
