@@ -41,7 +41,7 @@ namespace fmlbase{
         else
             epsilon = lambdas[niter-1] * 0.25;
 
-        stepsize_max = this->hessian().norm()*100;
+        stepsize_max = this->hessian().norm();
     }
 
     PIS2TASQRTLassoSolver::~PIS2TASQRTLassoSolver() {
@@ -68,7 +68,7 @@ namespace fmlbase{
             lambda = lambdas[i];
             double k_epsilon;
             if(i < niter-1)
-                k_epsilon = lambda*0.5;     //! MODIFIED:   lambda*0.25
+                k_epsilon = epsilon;  // lambda*0.5;     //! MODIFIED:   lambda*0.25
             else
                 k_epsilon = epsilon;
             double k_stepsize = stepsize_max;
@@ -164,7 +164,7 @@ namespace fmlbase{
             lambdaIdx = nlambda-1;
         auto newY = predict((*design_mat),lambdaIdx);
         auto diff = newY - (*response_vec);
-        return diff.norm();
+        return diff.norm()/sqrt(1.*ntrain_sample);
     }
 
     double PIS2TASQRTLassoSolver::eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx) {
@@ -172,15 +172,15 @@ namespace fmlbase{
             lambdaIdx = nlambda-1;
         auto newY = predict(newX,lambdaIdx);
         auto diff = newY - targetY;
-        return diff.norm();
+        return diff.norm()/sqrt(1.*targetY.size());
     }
 
     int PIS2TASQRTLassoSolver::validate(const MatrixXd &newX, const VectorXd &targetY) {
         int optIdx = -1;
-        double minloss = INFINITY;
+        double minloss = std::numeric_limits<double>::max();
         for (int i = 0; i < nlambda; ++i) {
             double newloss = this->eval(newX, targetY, i);
-            if(newloss > minloss)
+            if(newloss < minloss)
             {
                 minloss = newloss;
                 optIdx = i;

@@ -8,6 +8,7 @@
 #include <math.h>
 #include <fmlbase/SolverBase.h>
 #include <fmlbase/utils.h>
+#include <limits>       // std::numeric_limits
 #include <Eigen/Dense>
 
 using Eigen::VectorXd;
@@ -94,7 +95,7 @@ namespace fmlbase{
         VectorXd predict(int lambdaIdx = -1); // for training data
         VectorXd predict(const MatrixXd &newX, int lambdaIdx = -1);
 
-        // residue norm
+        // residue norm / sqrt(n)
         double eval(int lambdaIdx = -1); // for training data
         double eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx = -1);
 
