@@ -10,8 +10,13 @@ truetheta = True_Theta.csv
 inputformat = csv
 savepath_theta = estimated_theta.csv
 outputformat = csv
-algorithm = sqrtlasso
-epsilon = 0.00001
-niter = 50
+
+
+epsilon = 0.000001
+niter = 200
 sigma = 2
 verbose = 0         #0 or 1
+
+
+nexp=1
+algorithm = sqrtlasso

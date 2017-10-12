@@ -75,9 +75,6 @@ namespace fmlbase{
             return *this->hessianMat;
         }
 
-//        void train() override;
-//        void ISTA(double k_stepsize, double k_epsilon) override;
-
     private:
         MatrixXd *hessianMat;
         double sigma;       // the hyperparameter of the variance of the noise
