@@ -68,7 +68,7 @@ namespace fmlbase{
             lambda = lambdas[i];
             double k_epsilon;
             if(i < niter-1)
-                k_epsilon = epsilon;  // lambda*0.5;     //! MODIFIED:   lambda*0.25
+                k_epsilon = lambda*0.5;     //! MODIFIED:   lambda*0.25
             else
                 k_epsilon = epsilon;
             double k_stepsize = stepsize_max;

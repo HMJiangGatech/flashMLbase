@@ -13,5 +13,5 @@ outputformat = csv
 algorithm = sqrtlasso
 epsilon = 0.00001
 niter = 50
-sigma = 0.5
+sigma = 2
 verbose = 0         #0 or 1
