@@ -1,13 +1,10 @@
 # flashMLbase
 A lightweight reusable C++ Machine Learning Code Base
 
-------
-
 ## Model Zoo
 **PISTA**: Pathwise Iterative Shrinkage Thresholding Algorithm for Lasso
-**PIS$^2$TA**: PISTA for SQRT Lasso
 
-------
+**PIS$^2$TA**: PISTA for SQRT Lasso
 
 ## Usage
 An example of synthetic data is in `Tasks\Synthetic\`
