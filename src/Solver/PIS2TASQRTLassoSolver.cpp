@@ -41,7 +41,7 @@ namespace fmlbase{
         else
             epsilon = lambdas[niter-1] * 0.25;
 
-        stepsize_max = this->hessian().norm();
+        stepsize_max = this->hessian().norm()*param.getDoubleArg("stepsize_scale");
     }
 
     PIS2TASQRTLassoSolver::~PIS2TASQRTLassoSolver() {
@@ -68,7 +68,7 @@ namespace fmlbase{
             lambda = lambdas[i];
             double k_epsilon;
             if(i < niter-1)
-                k_epsilon = epsilon; //lambda*0.5;     //! MODIFIED:   lambda*0.25
+                k_epsilon = lambda*0.5;     //! MODIFIED:   lambda*0.25
             else
                 k_epsilon = epsilon;
             double k_stepsize = stepsize_max;
@@ -87,7 +87,6 @@ namespace fmlbase{
 
     void PIS2TASQRTLassoSolver::ISTA(double k_stepsize, double k_epsilon) {
         int t = 0;
-        std::vector<double> objvals;
         while(++t != 0)
         {
             VectorXd grad;
@@ -133,14 +132,10 @@ namespace fmlbase{
                           << "  lambda: "<< lambda
                           << std::endl;
             }
-            objvals.emplace_back(obj_value());
+            //std::cout<<obj_value()<<std::endl;
             if(omega <= k_epsilon)
                 break;
         }
-        double finalobj = obj_value();
-        for (double objval : objvals) {
-            std::cout<<objval-finalobj<<' ';
-        }std::cout << std::endl;
     }
 
     void PIS2TASQRTLassoSolver::savetheta() {

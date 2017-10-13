@@ -4,9 +4,15 @@ A lightweight reusable C++ Machine Learning Code Base
 ------
 
 ## Model Zoo
-SQRT Lasso (working)
+**PISTA**: Pathwise Iterative Shrinkage Thresholding Algorithm for Lasso
+**PIS$^2$TA**: PISTA for SQRT Lasso
 
 ------
 
-## Working Environment
-OS: linux 
+## Usage
+An example of synthetic data is in `Tasks\Synthetic\`
+
+- First, you need to write a file containing model configuration.
+- Then you may rewrite `runCLITask` in `src\cli_main.cpp`.
+- Complie your program via `CMake`.
+- Run `fmlbase` or `fmlbase.exe`

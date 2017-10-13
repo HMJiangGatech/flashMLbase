@@ -11,12 +11,11 @@ inputformat = csv
 savepath_theta = estimated_theta.csv
 outputformat = csv
 
-
-epsilon = 0.000001
+epsilon = 0.0001
 niter = 200
-sigma = 2
+sigma = 0.1
 verbose = 0         #0 or 1
+stepsize_scale = 10
 
-
-nexp=1
+nexp=100
 algorithm = sqrtlasso
