@@ -34,6 +34,11 @@ void runCLITask(const std::string &task_path)
     fmlbase::PIS2TASQRTLassoSolver solver1(param);
     fmlbase::PISTALassoSolver solver2(param);
 
+    MatrixXd* testx;
+    fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
+    VectorXd* testy;
+    fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
+
     {
         for (int i = 0; i < param.getIntArg("nexp"); ++i) {
             if(param.getStrArg("algorithm") == "sqrtlasso")
@@ -44,7 +49,9 @@ void runCLITask(const std::string &task_path)
                 auto end = std::chrono::steady_clock::now();
                 auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
                 times1.emplace_back(diff);
-                //cout<<i<<"th trail, training time (/s): "<<diff<<endl;
+                cout<<i<<"th trail, training time (/s): "<<diff<<endl;
+                cout<<i<<"train error: "<<solver1.eval()<<endl;
+                cout<<i<<"test error: "<<solver1.eval(*testx,*testy)<<endl;
 
             }
             if(param.getStrArg("algorithm") == "lasso")
@@ -56,144 +63,9 @@ void runCLITask(const std::string &task_path)
                 auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
                 times2.emplace_back(diff);
                 cout<<i<<"th trail, training time (/s): "<<diff<<endl;
+                cout<<i<<"train error: "<<solver2.eval()<<endl;
+                cout<<i<<"test error: "<<solver2.eval(*testx,*testy)<<endl;
             }
-        }
-
-        if(param.getStrArg("algorithm") == "sqrtlasso")
-        {
-            double mean = std::accumulate(std::begin(times1), std::end(times1), 0.0)/times1.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times1), std::end(times1), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times1.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
-        }
-
-        if(param.getStrArg("algorithm") == "lasso")
-        {
-            double mean = std::accumulate(std::begin(times2), std::end(times2), 0.0)/times2.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times2), std::end(times2), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times2.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
-        }
-
-    }
-
-
-    solver1.epsilon *= 0.1;
-    times1.clear();
-    {
-        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
-            if(param.getStrArg("algorithm") == "sqrtlasso")
-            {
-                solver1.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver1.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times1.emplace_back(diff);
-                //cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-
-            }
-            if(param.getStrArg("algorithm") == "lasso")
-            {
-                solver2.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver2.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times2.emplace_back(diff);
-                cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-            }
-        }
-
-        if(param.getStrArg("algorithm") == "sqrtlasso")
-        {
-            double mean = std::accumulate(std::begin(times1), std::end(times1), 0.0)/times1.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times1), std::end(times1), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times1.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
-        }
-
-        if(param.getStrArg("algorithm") == "lasso")
-        {
-            double mean = std::accumulate(std::begin(times2), std::end(times2), 0.0)/times2.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times2), std::end(times2), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times2.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
-        }
-
-    }
-
-    solver1.epsilon *= 0.1;
-    times1.clear();
-    {
-        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
-            if(param.getStrArg("algorithm") == "sqrtlasso")
-            {
-                solver1.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver1.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times1.emplace_back(diff);
-                //cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-
-            }
-            if(param.getStrArg("algorithm") == "lasso")
-            {
-                solver2.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver2.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times2.emplace_back(diff);
-                cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-            }
-        }
-
-        if(param.getStrArg("algorithm") == "sqrtlasso")
-        {
-            double mean = std::accumulate(std::begin(times1), std::end(times1), 0.0)/times1.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times1), std::end(times1), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times1.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
-        }
-
-        if(param.getStrArg("algorithm") == "lasso")
-        {
-            double mean = std::accumulate(std::begin(times2), std::end(times2), 0.0)/times2.size();
-            double accum  = 0.0;
-            std::for_each (std::begin(times2), std::end(times2), [&](const double d) {
-                accum  += (d-mean)*(d-mean);
-            });
-            double stdev = sqrt(accum/(times2.size()-1)); //standard deviation
-            cout.setf(ios::fixed);
-            std::cout<<"mean training time (/s): "<<setprecision(4)<<mean
-                     <<" ("<<setprecision(4)<< stdev << ")" <<std::endl;
         }
 
     }
@@ -204,7 +76,7 @@ int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/Synthetic");
+        runCLITask("./Tasks/DrivFace");
     else
         runCLITask(argv[1]);
 
