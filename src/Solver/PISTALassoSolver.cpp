@@ -26,10 +26,10 @@ namespace fmlbase{
         if(param.hasArg("epsilon"))
             epsilon = param.getDoubleArg("epsilon");
         else
-            epsilon = lambdas[niter-1] * 0.25;
+            epsilon = lambdas[niter-1] * 0.5;
 
         hessianMat = nullptr;
-        stepsize_max = this->hessian().norm();
+        stepsize_max = this->hessian().norm()*param.getDoubleArg("stepsize_scale");
     }
     void PISTALassoSolver::reinitialize() {
         PIS2TASQRTLassoSolver::reinitialize();

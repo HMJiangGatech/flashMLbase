@@ -46,3 +46,5 @@ fmlbase.exe
 #ignore large data
 *.log
 Tasks/Synthetic/*.csv
+Tasks/GHG
+Tasks/DrivFace/*
