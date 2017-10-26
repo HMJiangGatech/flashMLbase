@@ -132,7 +132,7 @@ namespace fmlbase{
                           << "  lambda: "<< lambda
                           << std::endl;
             }
-            //std::cout<<obj_value()<<std::endl;
+            std::cout<<loss_value()*loss_value()<<std::endl;
             if(omega <= k_epsilon)
                 break;
         }
