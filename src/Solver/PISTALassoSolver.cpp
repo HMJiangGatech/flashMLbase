@@ -14,7 +14,7 @@ namespace fmlbase{
         sigma = param.getDoubleArg("sigma");
         double min_lambda_ratio;
         if(param.hasArg("minlambda_ratio"))
-            min_lambda_ratio = param.getIntArg("minlambda_ratio");
+            min_lambda_ratio = sigma*param.getDoubleArg("minlambda_ratio");
         else
             min_lambda_ratio = sigma*sqrt(log(nfeature)/ntrain_sample) / lambdas[0];
         double anneal_lambda = pow(min_lambda_ratio,1./(niter-1));

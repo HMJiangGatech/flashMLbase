@@ -70,13 +70,26 @@ void runCLITask(const std::string &task_path)
 
     }
 
+    vector<double> &times = times1;
+    if(param.getStrArg("algorithm") == "sqrtlasso")
+        times = times1;
+    if(param.getStrArg("algorithm") == "lasso")
+        times = times2;
+
+    double sumT = 0;
+    for(double t : times)
+        sumT += t;
+
+    cout<<"mean training time (/s): "<<1.0*sumT/param.getIntArg("nexp")<<endl;
+
+
 }
 
 int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/DrivFace");
+        runCLITask("./Tasks/GHG");
     else
         runCLITask(argv[1]);
 

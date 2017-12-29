@@ -27,9 +27,10 @@ namespace fmlbase{
         lambda = lambdas[0];
         double min_lambda_ratio;
         if(param.hasArg("minlambda_ratio"))
-            min_lambda_ratio = param.getIntArg("minlambda_ratio");
+            min_lambda_ratio = param.getDoubleArg("minlambda_ratio");
         else
             min_lambda_ratio = sqrt(log(nfeature)/ntrain_sample) / lambdas[0];   //! different from the paper
+        //std::cout<<min_lambda_ratio<<std::endl;
         double anneal_lambda = pow(min_lambda_ratio,1./(niter-1));
         for (int i = 1; i < niter; ++i) {
             lambdas[i] = lambdas[i-1]*anneal_lambda;
@@ -132,7 +133,7 @@ namespace fmlbase{
                           << "  lambda: "<< lambda
                           << std::endl;
             }
-            std::cout<<loss_value()*loss_value()<<std::endl;
+            //std::cout<<loss_value()*loss_value()<<std::endl;
             if(omega <= k_epsilon)
                 break;
         }

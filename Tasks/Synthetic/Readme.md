@@ -1,1 +1,1 @@
-Use 'genData.m' to generate data first
+Data can be downloaded from [Google Drive](https://drive.google.com/open?id=1TLijauHOGFdPYNXhvq5EaZjWnQh3HhYT)

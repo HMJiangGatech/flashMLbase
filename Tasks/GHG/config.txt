@@ -1,0 +1,18 @@
+# all have to be lower case. 
+
+traindata = trainX.csv
+trainlebel = trainY.csv
+testdata = testX.csv
+testlabel = testY.csv
+inputformat = csv
+outputformat = csv
+
+minlambda_ratio = 0.02
+niter = 30
+# turn sigma to obtain similar error as sqrtlasso
+sigma = 0.13
+verbose = 0         #0 or 1
+stepsize_scale = 300
+
+nexp=10
+algorithm = lasso
