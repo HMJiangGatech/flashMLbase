@@ -7,7 +7,9 @@
 namespace fmlbase {
 
     PIS2TACMRSolver::PIS2TACMRSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param){
-
+    }
+    void PIS2TACMRSolver::reinitialize() {
+        PIS2TASQRTLassoSolver::reinitialize();
     }
 
 } // namespace fmlbase

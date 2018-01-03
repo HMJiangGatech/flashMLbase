@@ -20,6 +20,7 @@ namespace fmlbase{
 
     class PIS2TACMRSolver : public PIS2TASQRTLassoSolver {
         explicit PIS2TACMRSolver(const utils::FmlParam &param);
+        void reinitialize() override;
     };
 } // namespace fmlbase
 
