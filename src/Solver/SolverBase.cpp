@@ -6,7 +6,11 @@
 
 namespace fmlbase{
 
-    SolverBase::SolverBase(const utils::FmlParam &param, bool isMulVar) : solver_param(&param) {
+    SolverBase::SolverBase(const utils::FmlParam &param) : solver_param(&param) {
+        bool isMulVar = false;
+        if(param.hasArg("mul_var"))
+            if(param.getBoolArg("mul_var"))
+                isMulVar = true;
         if (param.getStrArg("inputformat") == "csv"){
             fmlbase::utils::readCsvMat(design_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("traindata"));
             if (!isMulVar)

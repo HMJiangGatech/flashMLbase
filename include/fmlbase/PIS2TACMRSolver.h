@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include <fmlbase/SolverBase.h>
+#include <fmlbase/PIS2TASQRTLassoSolver.h>
 #include <fmlbase/utils.h>
 #include <limits>       // std::numeric_limits
 #include <Eigen/Dense>
@@ -17,7 +18,7 @@ using Eigen::MatrixXd;
 
 namespace fmlbase{
 
-    class PIS2TACMRSolver : public SolverBase {
+    class PIS2TACMRSolver : public PIS2TASQRTLassoSolver {
         explicit PIS2TACMRSolver(const utils::FmlParam &param);
     };
 } // namespace fmlbase

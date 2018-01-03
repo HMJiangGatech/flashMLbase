@@ -17,7 +17,7 @@ namespace fmlbase{
     class SolverBase{
     public:
         SolverBase() = default;
-        explicit SolverBase(const utils::FmlParam &param, bool isMulVar = false);
+        explicit SolverBase(const utils::FmlParam &param);
         virtual void train() = 0;
         void saveVecParam(const VectorXd &parameter);
         void saveMatParam(const MatrixXd &parameter);

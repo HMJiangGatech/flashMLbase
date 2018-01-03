@@ -3,3 +3,12 @@
 // Description: 
 //
 #include <fmlbase/PIS2TACMRSolver.h>
+
+namespace fmlbase {
+
+    PIS2TACMRSolver::PIS2TACMRSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param){
+
+    }
+
+} // namespace fmlbase
+
