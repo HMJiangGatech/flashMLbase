@@ -89,7 +89,7 @@ int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/GHG");
+        runCLITask("./Tasks/DrivFace");
     else
         runCLITask(argv[1]);
 

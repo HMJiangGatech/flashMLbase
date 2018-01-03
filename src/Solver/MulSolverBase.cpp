@@ -6,7 +6,8 @@
 
 namespace fmlbase{
 
-    MulSolverBase::MulSolverBase(const utils::FmlParam &param) : solver_param(&param) {
+    MulSolverBase::MulSolverBase(const utils::FmlParam &param)  {
+        solver_param = &param;
         if (param.getStrArg("inputformat") == "csv"){
             fmlbase::utils::readCsvMat(design_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("traindata"));
             fmlbase::utils::readCsvMat(response_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("trainlebel"));

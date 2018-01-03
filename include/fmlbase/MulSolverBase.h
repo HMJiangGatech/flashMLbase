@@ -6,6 +6,12 @@
 #define FMLBASE_MULSOLVERBASE_H
 
 #include <fmlbase/SolverBase.h>
+#include <fmlbase/utils.h>
+
+#include <Eigen/Dense>
+
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
 
 namespace fmlbase{
 
@@ -13,7 +19,6 @@ namespace fmlbase{
     public:
         MulSolverBase() = default;
         explicit MulSolverBase(const utils::FmlParam &param);
-        virtual void train() = 0;
 
     protected:
         MatrixXd* response_mat;

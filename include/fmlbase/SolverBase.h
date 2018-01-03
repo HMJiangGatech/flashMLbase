@@ -21,6 +21,10 @@ namespace fmlbase{
         virtual void train() = 0;
         void saveVecParam(const VectorXd &parameter);
         void saveMatParam(const MatrixXd &parameter);
+        ~SolverBase() {
+            delete design_mat;
+            delete response_vec;
+        }
 
     protected:
         const utils::FmlParam *solver_param;
