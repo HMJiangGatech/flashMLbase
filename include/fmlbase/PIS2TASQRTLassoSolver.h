@@ -23,10 +23,10 @@ namespace fmlbase{
         virtual void reinitialize();
 
         // return the value of q function
-        inline double q_value(const VectorXd &temp_theta, const VectorXd &grad, const double &tilde_stepsize){
+        inline double q_value(const VectorXd &temp_theta, const VectorXd &grad, const double &tilde_stepsize, const double loss){
             double q_val;
             auto diff_theta = (temp_theta.array() - theta->array()).matrix();
-            q_val = loss_value() + grad.transpose()*diff_theta + 0.5*tilde_stepsize*diff_theta.squaredNorm()
+            q_val = loss + grad.transpose()*diff_theta + 0.5*tilde_stepsize*diff_theta.squaredNorm()
                     + lambda * temp_theta.cwiseAbs().sum();
             return q_val;
         }

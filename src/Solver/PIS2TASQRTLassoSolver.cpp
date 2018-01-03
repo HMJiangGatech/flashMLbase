@@ -93,6 +93,8 @@ namespace fmlbase{
             VectorXd grad;
             loss_grad(grad);
             double tau;
+            double loss;
+            loss = this->loss_value();
 
             // backtracking line search.
             double tilde_stepsize;
@@ -103,7 +105,7 @@ namespace fmlbase{
                 tau = lambda/tilde_stepsize;
                 temp_theta = *theta - grad/tilde_stepsize;
                 temp_theta = temp_theta.cwiseSign().cwiseProduct((temp_theta.array().abs() - tau).max(0).matrix());
-                double q_val = this->q_value(temp_theta,grad,tilde_stepsize);
+                double q_val = this->q_value(temp_theta,grad,tilde_stepsize,loss);
                 //std::cout <<"\t\tobj val :" << obj_value(&temp_theta) << " quadratic approximation: " << q_val<<std::endl;
                 if (obj_value(&temp_theta) < q_val)
                     tilde_stepsize *= 0.5;
