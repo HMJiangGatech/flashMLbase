@@ -6,12 +6,26 @@
 
 namespace fmlbase{
 
-    SolverBase::SolverBase(const utils::FmlParam &param) : solver_param(&param) {
+    SolverBase::SolverBase(const utils::FmlParam &param, bool isMulVar) : solver_param(&param) {
         if (param.getStrArg("inputformat") == "csv"){
             fmlbase::utils::readCsvMat(design_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("traindata"));
-            fmlbase::utils::readCsvVec(response_vec,param.getStrArg("rootpath")+"/"+param.getStrArg("trainlebel"));
+            if (!isMulVar)
+            {
+                fmlbase::utils::readCsvVec(response_vec,param.getStrArg("rootpath")+"/"+param.getStrArg("trainlebel"));
+                nresponse = 1;
+                ntrain_sample = response_vec->size();
+            }
+            else
+            {
+                MatrixXd* response_mat;
+                fmlbase::utils::readCsvMat(response_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("trainlebel"));
+                response_vec = new  VectorXd(Eigen::Map<VectorXd>(response_mat->data(), response_mat->cols()*response_mat->rows()));
+                nresponse = response_mat->cols();
+                ntrain_sample = response_mat->rows();
+                delete response_mat;
+            }
         } else throw std::runtime_error("Input data format: " +param.getStrArg("inputformat")+ "is not supported\n");
-        ntrain_sample = response_vec->size();
+
         if (ntrain_sample != design_mat->rows())
             throw std::runtime_error("Size of input data and label foes not match\n");
         nfeature = design_mat->cols();

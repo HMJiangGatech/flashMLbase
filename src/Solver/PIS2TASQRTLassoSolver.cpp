@@ -7,14 +7,18 @@
 
 namespace fmlbase{
 
-    PIS2TASQRTLassoSolver::PIS2TASQRTLassoSolver(const utils::FmlParam &param) : SolverBase(param), nlambda(niter){
+    PIS2TASQRTLassoSolver::PIS2TASQRTLassoSolver(const utils::FmlParam &param) : SolverBase(param), nlambda(niter) {
+        this->initialize();
+    }
+
+    void PIS2TASQRTLassoSolver::initialize() {
 
         theta = new VectorXd(nfeature);
         theta->setZero();
         thetas.emplace_back(theta);
 
-        if(param.hasArg("niter"))
-            niter = param.getIntArg("niter");
+        if(solver_param->hasArg("niter"))
+            niter = solver_param->getIntArg("niter");
         else
             niter = 100;
 
@@ -26,8 +30,8 @@ namespace fmlbase{
         lambdas[0] = grad0.cwiseAbs().maxCoeff();
         lambda = lambdas[0];
         double min_lambda_ratio;
-        if(param.hasArg("minlambda_ratio"))
-            min_lambda_ratio = param.getDoubleArg("minlambda_ratio");
+        if(solver_param->hasArg("minlambda_ratio"))
+            min_lambda_ratio = solver_param->getDoubleArg("minlambda_ratio");
         else
             min_lambda_ratio = sqrt(log(nfeature)/ntrain_sample) / lambdas[0];   //! different from the paper
         //std::cout<<min_lambda_ratio<<std::endl;
@@ -37,12 +41,12 @@ namespace fmlbase{
         }
 
         // setting epsilon
-        if(param.hasArg("epsilon"))
-            epsilon = param.getDoubleArg("epsilon");
+        if(solver_param->hasArg("epsilon"))
+            epsilon = solver_param->getDoubleArg("epsilon");
         else
             epsilon = lambdas[niter-1] * 0.25;
 
-        stepsize_max = this->hessian().norm()*param.getDoubleArg("stepsize_scale");
+        stepsize_max = this->hessian().norm()*solver_param->getDoubleArg("stepsize_scale");
     }
 
     PIS2TASQRTLassoSolver::~PIS2TASQRTLassoSolver() {

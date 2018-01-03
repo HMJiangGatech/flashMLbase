@@ -7,7 +7,7 @@
 
 
 #include <math.h>
-#include <fmlbase/MulSolverBase.h>
+#include <fmlbase/SolverBase.h>
 #include <fmlbase/utils.h>
 #include <limits>       // std::numeric_limits
 #include <Eigen/Dense>
@@ -15,6 +15,11 @@
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 
+namespace fmlbase{
 
+    class PIS2TACMRSolver : public SolverBase {
+        explicit PIS2TACMRSolver(const utils::FmlParam &param);
+    };
+} // namespace fmlbase
 
 #endif //FMLBASE_PIS2TACMRSOLVER_H

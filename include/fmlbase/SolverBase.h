@@ -17,11 +17,11 @@ namespace fmlbase{
     class SolverBase{
     public:
         SolverBase() = default;
-        explicit SolverBase(const utils::FmlParam &param);
+        explicit SolverBase(const utils::FmlParam &param, bool isMulVar = false);
         virtual void train() = 0;
         void saveVecParam(const VectorXd &parameter);
         void saveMatParam(const MatrixXd &parameter);
-        ~SolverBase() {
+        virtual ~SolverBase() {
             delete design_mat;
             delete response_vec;
         }
@@ -30,8 +30,9 @@ namespace fmlbase{
         const utils::FmlParam *solver_param;
         MatrixXd* design_mat;
         VectorXd* response_vec;
-        int ntrain_sample;
-        int nfeature;
+        long long int ntrain_sample;
+        long long int nfeature;
+        long long int nresponse;
         bool verbose;
     };
 } // namespace fmlbase
