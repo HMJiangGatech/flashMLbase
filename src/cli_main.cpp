@@ -25,12 +25,7 @@ void runCLITask(const std::string &task_path)
 {
     fmlbase::utils::FmlParam param(task_path);
 
-    vector<double> times1;
-    vector<double> est_error1;
-    vector<double> pred_error1;
-    vector<double> times2;
-    vector<double> est_error2;
-    vector<double> pred_error2;
+    vector<double> times;
 
 
     if(param.getStrArg("algorithm") == "sqrtlasso")
@@ -48,7 +43,7 @@ void runCLITask(const std::string &task_path)
             solver1.train();
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
-            times1.emplace_back(diff);
+            times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
             cout << i << "train error: " << solver1.eval() << endl;
             cout << i << "test error: " << solver1.eval(*testx, *testy) << endl;
@@ -69,20 +64,12 @@ void runCLITask(const std::string &task_path)
             solver2.train();
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
-            times2.emplace_back(diff);
+            times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
             cout << i << "train error: " << solver2.eval() << endl;
             cout << i << "test error: " << solver2.eval(*testx, *testy) << endl;
         }
     }
-
-    }
-
-    vector<double> &times = times1;
-    if(param.getStrArg("algorithm") == "sqrtlasso")
-        times = times1;
-    if(param.getStrArg("algorithm") == "lasso")
-        times = times2;
 
     double sumT = 0;
     for(double t : times)
