@@ -7,7 +7,7 @@
 namespace fmlbase{
     fmlbase::PISTALassoSolver::PISTALassoSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param) {
         // reset lambda
-        VectorXd grad0(nfeature);
+        VectorXd grad0(nparameter);
         loss_grad(grad0);
         lambdas[0] = grad0.cwiseAbs().maxCoeff();
         lambda = lambdas[0];

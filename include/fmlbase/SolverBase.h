@@ -32,6 +32,7 @@ namespace fmlbase{
         VectorXd* response_vec;
         long long int ntrain_sample;
         long long int nfeature;
+        long long int nparameter; // = nfeature*nparameter
         long long int nresponse;
         bool verbose;
     };

@@ -32,6 +32,14 @@ namespace fmlbase{
             return q_val;
         }
 
+        // return the residue
+        virtual inline void get_residure(VectorXd &residure, VectorXd *theta_t){
+            residure = (*response_vec) - (*design_mat)*(*theta_t);
+        }
+        virtual inline void get_residure(VectorXd &residure){
+            residure = (*response_vec) - (*design_mat)*(*theta);
+        }
+
         // return the value of loss function
         virtual inline double loss_value(VectorXd *theta_t){
             double objval;
@@ -66,6 +74,12 @@ namespace fmlbase{
             auto residue = ((*design_mat)*(*theta) - (*response_vec));
             grad = (*design_mat).transpose()* residue;
             grad /= sqrt(1.*ntrain_sample)*residue.norm();
+        }
+        virtual inline double loss_a_grad(VectorXd &grad){
+            auto residue = ((*design_mat)*(*theta) - (*response_vec));
+            grad = (*design_mat).transpose()* residue;
+            grad /= sqrt(1.*ntrain_sample)*residue.norm();
+            return residue.norm()/sqrt(1.*ntrain_sample);
         }
         // return the gradient of total objective function with sub-gradient taking 0 at 0.
         virtual inline void obj_grad(VectorXd &grad, VectorXd *theta_t){

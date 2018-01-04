@@ -31,42 +31,50 @@ void runCLITask(const std::string &task_path)
     vector<double> times2;
     vector<double> est_error2;
     vector<double> pred_error2;
-    fmlbase::PIS2TASQRTLassoSolver solver1(param);
-    fmlbase::PISTALassoSolver solver2(param);
 
-    MatrixXd* testx;
-    fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
-    VectorXd* testy;
-    fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
+    if(param.getStrArg("algorithm") == "sqrtlasso")
     {
-        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
-            if(param.getStrArg("algorithm") == "sqrtlasso")
-            {
-                solver1.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver1.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times1.emplace_back(diff);
-                cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-                cout<<i<<"train error: "<<solver1.eval()<<endl;
-                cout<<i<<"test error: "<<solver1.eval(*testx,*testy)<<endl;
+        fmlbase::PIS2TASQRTLassoSolver solver1(param);
+        MatrixXd* testx;
+        fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
+        VectorXd* testy;
+        fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
-            }
-            if(param.getStrArg("algorithm") == "lasso")
-            {
-                solver2.reinitialize();
-                auto begin = std::chrono::steady_clock::now();
-                solver2.train();
-                auto end = std::chrono::steady_clock::now();
-                auto diff = 1.*(end - begin).count()*nanoseconds::period::num / nanoseconds::period::den;
-                times2.emplace_back(diff);
-                cout<<i<<"th trail, training time (/s): "<<diff<<endl;
-                cout<<i<<"train error: "<<solver2.eval()<<endl;
-                cout<<i<<"test error: "<<solver2.eval(*testx,*testy)<<endl;
-            }
+        for (int i = 0; i < param.getIntArg("nexp"); ++i)
+        {
+            solver1.reinitialize();
+            auto begin = std::chrono::steady_clock::now();
+            solver1.train();
+            auto end = std::chrono::steady_clock::now();
+            auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
+            times1.emplace_back(diff);
+            cout << i << "th trail, training time (/s): " << diff << endl;
+            cout << i << "train error: " << solver1.eval() << endl;
+            cout << i << "test error: " << solver1.eval(*testx, *testy) << endl;
         }
+    }
+    if(param.getStrArg("algorithm") == "lasso")
+    {
+        fmlbase::PISTALassoSolver solver2(param);
+        MatrixXd* testx;
+        fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
+        VectorXd* testy;
+        fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
+
+        for (int i = 0; i < param.getIntArg("nexp"); ++i)
+        {
+            solver2.reinitialize();
+            auto begin = std::chrono::steady_clock::now();
+            solver2.train();
+            auto end = std::chrono::steady_clock::now();
+            auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
+            times2.emplace_back(diff);
+            cout << i << "th trail, training time (/s): " << diff << endl;
+            cout << i << "train error: " << solver2.eval() << endl;
+            cout << i << "test error: " << solver2.eval(*testx, *testy) << endl;
+        }
+    }
 
     }
 

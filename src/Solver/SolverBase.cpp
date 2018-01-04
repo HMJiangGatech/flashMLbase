@@ -11,6 +11,8 @@ namespace fmlbase{
         if(param.hasArg("mul_var"))
             if(param.getBoolArg("mul_var"))
                 isMulVar = true;
+        if(param.getStrArg("algorithm") == "CMR")
+            isMulVar = true;
         if (param.getStrArg("inputformat") == "csv"){
             fmlbase::utils::readCsvMat(design_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("traindata"));
             if (!isMulVar)
@@ -32,7 +34,10 @@ namespace fmlbase{
 
         if (ntrain_sample != design_mat->rows())
             throw std::runtime_error("Size of input data and label foes not match\n");
+
         nfeature = design_mat->cols();
+        nparameter = nfeature*nresponse;
+
         if(param.hasArg("verbose"))
             verbose = param.getBoolArg("verbose");
         else

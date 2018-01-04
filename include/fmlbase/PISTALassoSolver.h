@@ -52,6 +52,12 @@ namespace fmlbase{
             grad = (*design_mat).transpose()* ((*design_mat)*(*theta) - (*response_vec));
             grad /= (1.*ntrain_sample);
         }
+        inline double loss_a_grad(VectorXd &grad) override {
+            auto residue = ((*design_mat)*(*theta) - (*response_vec));
+            grad = (*design_mat).transpose()* residue;
+            grad /= (1.*ntrain_sample);
+            return residue.squaredNorm() / (2.*ntrain_sample);
+        }
 
         // return the gradient of total objective function with sub-gradient taking 0 at 0.
         inline void obj_grad(VectorXd &grad, VectorXd *theta_t) override {

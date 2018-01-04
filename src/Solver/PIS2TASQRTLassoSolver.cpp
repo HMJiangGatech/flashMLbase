@@ -13,7 +13,7 @@ namespace fmlbase{
 
     void PIS2TASQRTLassoSolver::initialize() {
 
-        theta = new VectorXd(nfeature);
+        theta = new VectorXd(nparameter);
         theta->setZero();
         thetas.emplace_back(theta);
 
@@ -25,7 +25,7 @@ namespace fmlbase{
         // initializing lambdas
         lambda = 0;
         lambdas = new double[niter];
-        VectorXd grad0(nfeature);
+        VectorXd grad0(nparameter);
         loss_grad(grad0);
         lambdas[0] = grad0.cwiseAbs().maxCoeff();
         lambda = lambdas[0];
@@ -60,7 +60,7 @@ namespace fmlbase{
             delete theta;
         thetas.clear();
 
-        theta = new VectorXd(nfeature);
+        theta = new VectorXd(nparameter);
         theta->setZero();
         thetas.emplace_back(theta);
     }
@@ -95,15 +95,15 @@ namespace fmlbase{
         while(++t != 0)
         {
             VectorXd grad;
-            loss_grad(grad);
             double tau;
             double loss;
-            loss = this->loss_value();
+
+            loss = loss_a_grad(grad);
 
             // backtracking line search.
             double tilde_stepsize;
             tilde_stepsize = k_stepsize;
-            VectorXd temp_theta(nfeature);
+            VectorXd temp_theta(nparameter);
             bool exitflag1 = false, exitflag2 = false;
             while (true){
                 tau = lambda/tilde_stepsize;
@@ -166,7 +166,7 @@ namespace fmlbase{
     double PIS2TASQRTLassoSolver::eval(int lambdaIdx) {
         if(lambdaIdx == -1)
             lambdaIdx = nlambda-1;
-        auto newY = predict((*design_mat),lambdaIdx);
+        auto newY = predict(lambdaIdx);
         auto diff = newY - (*response_vec);
         return diff.norm()/sqrt(1.*ntrain_sample);
     }
