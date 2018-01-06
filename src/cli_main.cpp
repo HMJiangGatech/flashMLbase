@@ -14,6 +14,7 @@
 #include <fmlbase/SolverBase.h>
 #include <fmlbase/PIS2TASQRTLassoSolver.h>
 #include <fmlbase/PISTALassoSolver.h>
+#include <fmlbase/PIS2TACMRSolver.h>
 
 #include <Eigen/Dense>
 
@@ -66,6 +67,25 @@ void runCLITask(const std::string &task_path)
             cout << i << "test error: " << solver2.eval(*testx, *testy) << endl;
         }
     }
+    if(param.getStrArg("algorithm") == "CMR") {
+        fmlbase::PIS2TACMRSolver solver(param);
+        MatrixXd* testx;
+        fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
+        MatrixXd* testy;
+        fmlbase::utils::readCsvMat(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
+
+        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
+            solver.reinitialize();
+            auto begin = std::chrono::steady_clock::now();
+            solver.train();
+            auto end = std::chrono::steady_clock::now();
+            auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
+            times.emplace_back(diff);
+            cout << i << "th trail, training time (/s): " << diff << endl;
+            cout << i << "train error: " << solver.eval() << endl;
+            cout << i << "test error: " << solver.eval(*testx, *testy) << endl;
+        }
+    }
 
     double sumT = 0;
     for(double t : times)
@@ -80,7 +100,7 @@ int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/DrivFace");
+        runCLITask("./Tasks/Synthetic_CMR");
     else
         runCLITask(argv[1]);
 

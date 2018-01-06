@@ -3,7 +3,7 @@ rng shuffle
 n = 200;
 d = 2000;
 nr = 3;
-sigma = 2.0;
+sigma = 1.0;
 var = eye(d)*0.5 + 0.5;
 mu = randn(1,d)*0;
 beta = zeros(d,nr);

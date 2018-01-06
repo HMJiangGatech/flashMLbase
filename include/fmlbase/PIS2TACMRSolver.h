@@ -172,6 +172,18 @@ namespace fmlbase{
 
             return hessian_norm;
         }
+
+        // predict
+        virtual VectorXd predict(int lambdaIdx, int responseIdx); // for training data
+        VectorXd predict(int responseIdx) override { predict(-1,responseIdx); } // for training data
+        VectorXd predict() override { throw std::runtime_error("Can not call predict without parameter in CMR\n"); } // for training data
+        virtual VectorXd predict(const MatrixXd &newX, int lambdaIdx, int responseIdx);
+        VectorXd predict(const MatrixXd &newX, int responseIdx) override { predict(newX, -1, responseIdx); };
+        VectorXd predict(const MatrixXd &newX) override { throw std::runtime_error("Can not call predict without without specified responseIdx in CMR\n"); }
+
+        // residue norm / sqrt(n)
+        double eval(int lambdaIdx) override; // for training data
+        double eval(const MatrixXd &newX, const MatrixXd &targetY, int lambdaIdx);
     };
 } // namespace fmlbase
 

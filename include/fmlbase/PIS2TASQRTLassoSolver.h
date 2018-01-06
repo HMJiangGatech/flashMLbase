@@ -115,12 +115,16 @@ namespace fmlbase{
         virtual void ISTA(double k_stepsize, double k_epsilon);
 
 
-        VectorXd predict(int lambdaIdx = -1); // for training data
-        VectorXd predict(const MatrixXd &newX, int lambdaIdx = -1);
+        virtual VectorXd predict(int lambdaIdx); // for training data
+        virtual VectorXd predict(){ predict(-1); } // for training data
+        virtual VectorXd predict(const MatrixXd &newX, int lambdaIdx);
+        virtual VectorXd predict(const MatrixXd &newX){ predict(newX,-1); }
 
         // residue norm / sqrt(n)
-        double eval(int lambdaIdx = -1); // for training data
-        double eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx = -1);
+        virtual double eval(); // for training data
+        virtual double eval(int lambdaIdx); // for training data
+        virtual double eval(const MatrixXd &newX, const VectorXd &targetY);
+        virtual double eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx);
 
         // estimation error
         double estError(const VectorXd &trueTheta, int lambdaIdx = -1);

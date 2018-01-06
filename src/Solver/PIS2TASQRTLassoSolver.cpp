@@ -163,12 +163,20 @@ namespace fmlbase{
         return newY;
     }
 
+    double PIS2TASQRTLassoSolver::eval() {
+        eval(-1);
+    }
+
     double PIS2TASQRTLassoSolver::eval(int lambdaIdx) {
         if(lambdaIdx == -1)
             lambdaIdx = nlambda-1;
         auto newY = predict(lambdaIdx);
         auto diff = newY - (*response_vec);
         return diff.norm()/sqrt(1.*ntrain_sample);
+    }
+
+    double PIS2TASQRTLassoSolver::eval(const MatrixXd &newX, const VectorXd &targetY) {
+        eval(newX,targetY,-1);
     }
 
     double PIS2TASQRTLassoSolver::eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx) {

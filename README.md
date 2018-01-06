@@ -1,5 +1,5 @@
 # flashMLbase
-A lightweight reusable C++ Machine Learning Code Base
+A lightweight reusable C++ Machine Learning Code Base. It is built upon Eigen, which provide efficient matrix computation operator.
 
 ## Model Zoo
 **PISTA**: Pathwise Iterative Shrinkage Thresholding Algorithm for Lasso
