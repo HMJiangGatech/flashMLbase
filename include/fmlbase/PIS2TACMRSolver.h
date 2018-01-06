@@ -155,14 +155,22 @@ namespace fmlbase{
         }
 
         inline double hessian_norm() override {
-            
 
-            auto residue =  ((*design_mat)*(*theta) - (*response_vec));
-            double residue_norm = residue.norm();
-            auto temp_vec = (*design_mat).transpose()*residue;
-            auto hessianMat = 1./(residue_norm*sqrt(1.*ntrain_sample)) * ((design_mat->transpose() * (*design_mat)) - (temp_vec * temp_vec.transpose())/ pow(residue_norm,2));
+            double hessian_norm = 1;
+            double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
+            #pragma omp parallel for
+            for (int i = 0; i < nresponse; ++i) {
+                auto subtheta = (theta->segment(i * nfeature, nfeature));
+                auto residue = ((response_vec->segment(i * nfeature, nfeature)) -
+                 (*design_mat) * subtheta);
+                double residue_norm = residue.norm();
+                auto temp_vec = (*design_mat).transpose()*residue;
+                auto hessianMat = 1./(residue_norm*sqrt(1.*ntrain_sample)) * ((design_mat->transpose() * (*design_mat)) - (temp_vec * temp_vec.transpose())/ pow(residue_norm,2));
 
-            return 0;
+                hessian_norm *= hessianMat.norm();
+            }
+
+            return hessian_norm;
         }
     };
 } // namespace fmlbase
