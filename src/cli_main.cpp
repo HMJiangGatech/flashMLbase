@@ -28,16 +28,14 @@ void runCLITask(const std::string &task_path)
     vector<double> times;
 
 
-    if(param.getStrArg("algorithm") == "sqrtlasso")
-    {
+    if(param.getStrArg("algorithm") == "sqrtlasso") {
         fmlbase::PIS2TASQRTLassoSolver solver1(param);
         MatrixXd* testx;
         fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
         VectorXd* testy;
         fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
-        for (int i = 0; i < param.getIntArg("nexp"); ++i)
-        {
+        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
             solver1.reinitialize();
             auto begin = std::chrono::steady_clock::now();
             solver1.train();
@@ -49,16 +47,14 @@ void runCLITask(const std::string &task_path)
             cout << i << "test error: " << solver1.eval(*testx, *testy) << endl;
         }
     }
-    if(param.getStrArg("algorithm") == "lasso")
-    {
+    if(param.getStrArg("algorithm") == "lasso") {
         fmlbase::PISTALassoSolver solver2(param);
         MatrixXd* testx;
         fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
         VectorXd* testy;
         fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
-        for (int i = 0; i < param.getIntArg("nexp"); ++i)
-        {
+        for (int i = 0; i < param.getIntArg("nexp"); ++i) {
             solver2.reinitialize();
             auto begin = std::chrono::steady_clock::now();
             solver2.train();

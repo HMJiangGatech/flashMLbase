@@ -46,7 +46,7 @@ namespace fmlbase{
         else
             epsilon = lambdas[niter-1] * 0.25;
 
-        stepsize_max = this->hessian().norm()*solver_param->getDoubleArg("stepsize_scale");
+        stepsize_max = this->hessian_norm()*solver_param->getDoubleArg("stepsize_scale");
     }
 
     PIS2TASQRTLassoSolver::~PIS2TASQRTLassoSolver() {
@@ -84,7 +84,7 @@ namespace fmlbase{
                 std::cout   << "  error: "<< k_epsilon
                             << "  obj val: "<< obj_value()
                             << "  loss val: "<< loss_value()
-                            << "  hessian norm" << this->hessian().norm()
+                            << "  hessian norm" << this->hessian_norm()
                             <<std::endl;
             }
         }

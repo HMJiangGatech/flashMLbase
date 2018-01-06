@@ -103,6 +103,14 @@ namespace fmlbase{
             return hessianMat;
         }
 
+        virtual inline double hessian_norm(){
+            auto residue =  ((*design_mat)*(*theta) - (*response_vec));
+            double residue_norm = residue.norm();
+            auto temp_vec = (*design_mat).transpose()*residue;
+            auto hessianMat = 1./(residue_norm*sqrt(1.*ntrain_sample)) * ((design_mat->transpose() * (*design_mat)) - (temp_vec * temp_vec.transpose())/ pow(residue_norm,2));
+            return hessianMat.norm();
+        }
+
         void train() override;
         virtual void ISTA(double k_stepsize, double k_epsilon);
 

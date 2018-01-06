@@ -81,8 +81,18 @@ namespace fmlbase{
             return *this->hessianMat;
         }
 
+        inline double hessian_norm() override {
+            if(this->hessianMat != nullptr)
+                return hessianMatNorm;
+
+            this->hessianMat = new MatrixXd(design_mat->transpose() * (*design_mat) / (1.*ntrain_sample));
+            hessianMatNorm = this->hessianMat->norm();
+            return hessianMatNorm;
+        }
+
     private:
         MatrixXd *hessianMat;
+        double hessianMatNorm;
         double sigma;       // the hyperparameter of the variance of the noise
     };
 } // namespace fmlbase
