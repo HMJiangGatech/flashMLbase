@@ -56,7 +56,7 @@ namespace fmlbase{
                 objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta_t->segment(i * nfeature, nfeature))).norm() *
                           sqrt_ntrain_sample_inv;
-                regvec += theta->segment(i * nfeature, nfeature).array().matrix();
+                regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
 
             objval += lambda*regvec.cwiseSqrt().sum();
@@ -71,7 +71,7 @@ namespace fmlbase{
                 objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta->segment(i * nfeature, nfeature))).norm() *
                           sqrt_ntrain_sample_inv;
-                regvec += theta->segment(i * nfeature, nfeature).array().matrix();
+                regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
 
             objval += lambda*regvec.cwiseSqrt().sum();
@@ -132,8 +132,9 @@ namespace fmlbase{
             regvec = lambda*regvec.cwiseSqrt();
             //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += (theta_t->segment(i * nfeature, nfeature).array() *
-                                                         (regvec).array()).matrix();
+                grad.segment(i * nfeature, nfeature) += ((theta_t->segment(i * nfeature, nfeature).array() /
+                                                          (regvec.array() + 0.0000000001)) *
+                                                         regvec.cwiseSign().cwiseAbs().array()).matrix();
             }
         }
 
@@ -150,10 +151,12 @@ namespace fmlbase{
                 regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
             regvec = lambda*regvec.cwiseSqrt();
+            //std::cout << regvec << std::endl;
             //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += (theta->segment(i * nfeature, nfeature).array() *
-                                                         (regvec).array()).matrix();
+                grad.segment(i * nfeature, nfeature) += ((theta->segment(i * nfeature, nfeature).array() /
+                                                          (regvec.array() + 0.0000000001)) *
+                                                         regvec.cwiseSign().cwiseAbs().array()).matrix();
             }
         }
 
@@ -165,10 +168,12 @@ namespace fmlbase{
             for (int i = 0; i < nresponse; ++i) {
                 auto subtheta = (theta->segment(i * nfeature, nfeature));
                 auto residue = ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
-                 (*design_mat) * subtheta);
+                                (*design_mat) * subtheta);
                 double residue_norm = residue.norm();
-                auto temp_vec = (*design_mat).transpose()*residue;
-                auto hessianMat = 1./(residue_norm*sqrt(1.*ntrain_sample)) * ((design_mat->transpose() * (*design_mat)) - (temp_vec * temp_vec.transpose())/ pow(residue_norm,2));
+                auto temp_vec = (*design_mat).transpose() * residue;
+                auto hessianMat = 1. / (residue_norm * sqrt(1. * ntrain_sample)) *
+                                  ((design_mat->transpose() * (*design_mat)) -
+                                   (temp_vec * temp_vec.transpose()) / pow(residue_norm, 2));
 
                 hessian_norm *= hessianMat.norm();
             }

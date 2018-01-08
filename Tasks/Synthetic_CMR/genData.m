@@ -1,7 +1,7 @@
 rng shuffle
 
 n = 200;
-d = 2000;
+d = 200;
 nr = 3;
 sigma = 1.0;
 var = eye(d)*0.5 + 0.5;
