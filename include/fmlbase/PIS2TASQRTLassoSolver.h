@@ -71,13 +71,11 @@ namespace fmlbase{
             grad /= sqrt(1.*ntrain_sample)*residue.norm();
         }
         virtual inline void loss_grad(VectorXd &grad){
-            std::cout << "sqrt loss_grad\n";
             auto residue = ((*design_mat)*(*theta) - (*response_vec));
             grad = (*design_mat).transpose()* residue;
             grad /= sqrt(1.*ntrain_sample)*residue.norm();
         }
         virtual inline double loss_a_grad(VectorXd &grad){
-            std::cout << "sqrt loss_a_grad\n";
             auto residue = ((*design_mat)*(*theta) - (*response_vec));
             grad = (*design_mat).transpose()* residue;
             grad /= sqrt(1.*ntrain_sample)*residue.norm();

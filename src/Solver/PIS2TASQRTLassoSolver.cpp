@@ -94,7 +94,7 @@ namespace fmlbase{
         int t = 0;
         while(++t != 0)
         {
-            VectorXd grad;
+            VectorXd grad(nparameter);
             double tau;
             double loss;
 

@@ -32,7 +32,7 @@ namespace fmlbase {
         double error = 0;
         for (int i = 0; i < nresponse; ++i) {
             auto newY = (*design_mat)*((*thetas[lambdaIdx]).segment(i * nfeature, nfeature));
-            auto diff = newY - (response_vec->segment(i * nfeature, nfeature));
+            auto diff = newY - (response_vec->segment(i * ntrain_sample, ntrain_sample));
             error += diff.squaredNorm();
         }
         return error;

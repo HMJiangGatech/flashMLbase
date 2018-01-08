@@ -27,9 +27,9 @@ namespace fmlbase{
         inline double loss_value(VectorXd *theta_t) override {
             double objval = 0;
             double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                objval += ((response_vec->segment(i * nfeature, nfeature)) -
+                objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta_t->segment(i * nfeature, nfeature))).norm() * sqrt_ntrain_sample_inv;
             }
             return objval;
@@ -38,9 +38,9 @@ namespace fmlbase{
         inline double loss_value() override {
             double objval =0;
             double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                objval += ((response_vec->segment(i * nfeature, nfeature)) -
+                objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta->segment(i * nfeature, nfeature))).norm() * sqrt_ntrain_sample_inv;
             }
             return objval;
@@ -51,9 +51,9 @@ namespace fmlbase{
             double objval =0;
             VectorXd regvec = VectorXd::Zero(nfeature);
             double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                objval += ((response_vec->segment(i * nfeature, nfeature)) -
+                objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta_t->segment(i * nfeature, nfeature))).norm() *
                           sqrt_ntrain_sample_inv;
                 regvec += theta->segment(i * nfeature, nfeature).array().matrix();
@@ -66,9 +66,9 @@ namespace fmlbase{
             double objval =0;
             VectorXd regvec = VectorXd::Zero(nfeature);
             double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                objval += ((response_vec->segment(i * nfeature, nfeature)) -
+                objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta->segment(i * nfeature, nfeature))).norm() *
                           sqrt_ntrain_sample_inv;
                 regvec += theta->segment(i * nfeature, nfeature).array().matrix();
@@ -80,37 +80,35 @@ namespace fmlbase{
 
         // return the gradient of total objective function
         inline void loss_grad(VectorXd &grad, VectorXd *theta_t) override {
-            grad = VectorXd::Zero(nparameter);
+            grad.setZero();
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto residue = ((*design_mat) * (theta_t->segment(i * nfeature, nfeature)) -
-                                (response_vec->segment(i * nfeature, nfeature)));
+                                (response_vec->segment(i * ntrain_sample, ntrain_sample)));
                 grad.segment(i * nfeature, nfeature) = (*design_mat).transpose() * residue;
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
             }
         }
         inline void loss_grad(VectorXd &grad) override {
-            std::cout << "cmr loss_grad\n";
-            grad = VectorXd::Zero(nparameter);
+            grad.setZero();
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto residue = ((*design_mat) * (theta->segment(i * nfeature, nfeature)) -
-                                (response_vec->segment(i * nfeature, nfeature)));
+                                (response_vec->segment(i * ntrain_sample, ntrain_sample)));
                 grad.segment(i * nfeature, nfeature) = (*design_mat).transpose() * residue;
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
             }
         }
         inline double loss_a_grad(VectorXd &grad) override {
-            std::cout << "cmr loss_a_grad\n";
             double objval = 0;
-            grad = VectorXd::Zero(nparameter);
+            grad.setZero();
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto residue = ((*design_mat) * (theta->segment(i * nfeature, nfeature)) -
-                                (response_vec->segment(i * nfeature, nfeature)));
+                                (response_vec->segment(i * ntrain_sample, ntrain_sample)));
                 grad.segment(i * nfeature, nfeature) = (*design_mat).transpose() * residue;
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
                 objval += residue.norm() / sqrt_ntrain_sample;
@@ -120,40 +118,42 @@ namespace fmlbase{
 
         // return the gradient of total objective function with sub-gradient taking 0 at 0.
         inline void obj_grad(VectorXd &grad, VectorXd *theta_t) override {
-            grad = VectorXd::Zero(nparameter);
+            grad.setZero();
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
             VectorXd regvec = VectorXd::Zero(nfeature);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto residue = ((*design_mat) * (theta_t->segment(i * nfeature, nfeature)) -
-                                (response_vec->segment(i * nfeature, nfeature)));
+                                (response_vec->segment(i * ntrain_sample, ntrain_sample)));
                 grad.segment(i * nfeature, nfeature) = (*design_mat).transpose() * residue;
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
-                regvec += theta->segment(i * nfeature, nfeature).array().matrix();
+                regvec += theta_t->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
             regvec = lambda*regvec.cwiseSqrt();
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += theta_t->cwiseQuotient(regvec);
+                grad.segment(i * nfeature, nfeature) += (theta_t->segment(i * nfeature, nfeature).array() *
+                                                         (regvec).array()).matrix();
             }
         }
 
         inline void obj_grad(VectorXd &grad) override {
-            grad = VectorXd::Zero(nparameter);
+            grad.setZero();
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
             VectorXd regvec = VectorXd::Zero(nfeature);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto residue = ((*design_mat) * (theta->segment(i * nfeature, nfeature)) -
-                                (response_vec->segment(i * nfeature, nfeature)));
+                                (response_vec->segment(i * ntrain_sample, ntrain_sample)));
                 grad.segment(i * nfeature, nfeature) = (*design_mat).transpose() * residue;
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
-                regvec += theta->segment(i * nfeature, nfeature).array().matrix();
+                regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
             regvec = lambda*regvec.cwiseSqrt();
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += theta->cwiseQuotient(regvec);
+                grad.segment(i * nfeature, nfeature) += (theta->segment(i * nfeature, nfeature).array() *
+                                                         (regvec).array()).matrix();
             }
         }
 
@@ -161,10 +161,10 @@ namespace fmlbase{
 
             double hessian_norm = 1;
             double  sqrt_ntrain_sample_inv = 1. / sqrt(1. * ntrain_sample);
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
                 auto subtheta = (theta->segment(i * nfeature, nfeature));
-                auto residue = ((response_vec->segment(i * nfeature, nfeature)) -
+                auto residue = ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                  (*design_mat) * subtheta);
                 double residue_norm = residue.norm();
                 auto temp_vec = (*design_mat).transpose()*residue;

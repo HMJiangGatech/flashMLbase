@@ -25,7 +25,7 @@ namespace fmlbase{
             {
                 MatrixXd* response_mat;
                 fmlbase::utils::readCsvMat(response_mat,param.getStrArg("rootpath")+"/"+param.getStrArg("trainlebel"));
-                response_vec = new  VectorXd(Eigen::Map<VectorXd>(response_mat->data(), response_mat->cols()*response_mat->rows()));
+                response_vec = new  VectorXd(Eigen::Map<VectorXd>(response_mat->data(), response_mat->size()));
                 nresponse = response_mat->cols();
                 ntrain_sample = response_mat->rows();
                 delete response_mat;

@@ -15,7 +15,7 @@ epsilon = 0.000001
 niter = 31
 #sigma depends on the data set: 0.1 0.5 1.0 2.0
 sigma = 1.0
-verbose = 0         #0 or 1
+verbose = 1         #0 or 1
 stepsize_scale = 50
 
 nexp=100
