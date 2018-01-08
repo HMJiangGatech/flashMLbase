@@ -19,6 +19,6 @@ sigma = 2.0
 verbose = 0         #0 or 1
 stepsize_scale = 50
 
-nexp=100
+nexp=5
 # lasso or sqrtlasso
-algorithm = sqrtlasso
+algorithm = lasso

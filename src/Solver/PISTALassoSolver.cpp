@@ -5,16 +5,30 @@
 #include <fmlbase/PISTALassoSolver.h>
 
 namespace fmlbase{
-    fmlbase::PISTALassoSolver::PISTALassoSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param) {
-        // reset lambda
+    PISTALassoSolver::PISTALassoSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param) {
+    }
+    void PISTALassoSolver::initialize() {
+
+        theta = new VectorXd(nparameter);
+        theta->setZero();
+        thetas.emplace_back(theta);
+
+        if(solver_param->hasArg("niter"))
+            niter = solver_param->getIntArg("niter");
+        else
+            niter = 100;
+
+        // initializing lambdas
+        lambda = 0;
+        lambdas = new double[niter];
         VectorXd grad0(nparameter);
         loss_grad(grad0);
         lambdas[0] = grad0.cwiseAbs().maxCoeff();
         lambda = lambdas[0];
-        sigma = param.getDoubleArg("sigma");
+        sigma = solver_param->getDoubleArg("sigma");
         double min_lambda_ratio;
-        if(param.hasArg("minlambda_ratio"))
-            min_lambda_ratio = sigma*param.getDoubleArg("minlambda_ratio");
+        if(solver_param->hasArg("minlambda_ratio"))
+            min_lambda_ratio = sigma*solver_param->getDoubleArg("minlambda_ratio");
         else
             min_lambda_ratio = sigma*sqrt(log(nfeature)/ntrain_sample) / lambdas[0];
         double anneal_lambda = pow(min_lambda_ratio,1./(niter-1));
@@ -23,16 +37,17 @@ namespace fmlbase{
         }
 
         // setting epsilon
-        if(param.hasArg("epsilon"))
-            epsilon = param.getDoubleArg("epsilon");
+        if(solver_param->hasArg("epsilon"))
+            epsilon = solver_param->getDoubleArg("epsilon");
         else
             epsilon = lambdas[niter-1] * 0.5;
 
         hessianMat = nullptr;
-        stepsize_max = this->hessian().norm()*param.getDoubleArg("stepsize_scale");
+        stepsize_max = this->hessian().norm()*solver_param->getDoubleArg("stepsize_scale");
     }
     void PISTALassoSolver::reinitialize() {
         PIS2TASQRTLassoSolver::reinitialize();
     }
+
 
 }// namespace fmlbase

@@ -17,6 +17,7 @@ namespace fmlbase{
     class PISTALassoSolver: public PIS2TASQRTLassoSolver {
     public:
         explicit PISTALassoSolver(const utils::FmlParam &param);
+        void initialize() override;
         void reinitialize() override;
 
         // return the value of loss function

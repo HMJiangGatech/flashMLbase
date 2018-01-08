@@ -8,7 +8,7 @@
 namespace fmlbase{
 
     PIS2TASQRTLassoSolver::PIS2TASQRTLassoSolver(const utils::FmlParam &param) : SolverBase(param), nlambda(niter) {
-        this->initialize();
+        //this->initialize();
     }
 
     void PIS2TASQRTLassoSolver::initialize() {

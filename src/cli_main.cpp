@@ -30,45 +30,48 @@ void runCLITask(const std::string &task_path)
 
 
     if(param.getStrArg("algorithm") == "sqrtlasso") {
-        fmlbase::PIS2TASQRTLassoSolver solver1(param);
+        fmlbase::PIS2TASQRTLassoSolver solver(param);
+        solver.initialize();
         MatrixXd* testx;
         fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
         VectorXd* testy;
         fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
         for (int i = 0; i < param.getIntArg("nexp"); ++i) {
-            solver1.reinitialize();
+            solver.reinitialize();
             auto begin = std::chrono::steady_clock::now();
-            solver1.train();
+            solver.train();
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
             times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
-            cout << i << "train error: " << solver1.eval() << endl;
-            cout << i << "test error: " << solver1.eval(*testx, *testy) << endl;
+            cout << i << "train error: " << solver.eval() << endl;
+            cout << i << "test error: " << solver.eval(*testx, *testy) << endl;
         }
     }
     if(param.getStrArg("algorithm") == "lasso") {
-        fmlbase::PISTALassoSolver solver2(param);
+        fmlbase::PISTALassoSolver solver(param);
+        solver.initialize();
         MatrixXd* testx;
         fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
         VectorXd* testy;
         fmlbase::utils::readCsvVec(testy, param.getStrArg("rootpath") + "/"+param.getStrArg("testlabel"));
 
         for (int i = 0; i < param.getIntArg("nexp"); ++i) {
-            solver2.reinitialize();
+            solver.reinitialize();
             auto begin = std::chrono::steady_clock::now();
-            solver2.train();
+            solver.train();
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
             times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
-            cout << i << "train error: " << solver2.eval() << endl;
-            cout << i << "test error: " << solver2.eval(*testx, *testy) << endl;
+            cout << i << "train error: " << solver.eval() << endl;
+            cout << i << "test error: " << solver.eval(*testx, *testy) << endl;
         }
     }
     if(param.getStrArg("algorithm") == "CMR") {
         fmlbase::PIS2TACMRSolver solver(param);
+        solver.initialize();
         MatrixXd* testx;
         fmlbase::utils::readCsvMat(testx, param.getStrArg("rootpath") + "/"+param.getStrArg("testdata"));
         MatrixXd* testy;

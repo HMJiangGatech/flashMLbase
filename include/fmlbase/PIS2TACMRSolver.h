@@ -91,6 +91,7 @@ namespace fmlbase{
             }
         }
         inline void loss_grad(VectorXd &grad) override {
+            std::cout << "cmr loss_grad\n";
             grad = VectorXd::Zero(nparameter);
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
             #pragma omp parallel for
@@ -102,6 +103,7 @@ namespace fmlbase{
             }
         }
         inline double loss_a_grad(VectorXd &grad) override {
+            std::cout << "cmr loss_a_grad\n";
             double objval = 0;
             grad = VectorXd::Zero(nparameter);
             double  sqrt_ntrain_sample = sqrt(1. * ntrain_sample);
