@@ -19,6 +19,7 @@ using Eigen::MatrixXd;
 namespace fmlbase{
 
     class PIS2TACMRSolver : public PIS2TASQRTLassoSolver {
+    public:
         explicit PIS2TACMRSolver(const utils::FmlParam &param);
         void reinitialize() override;
 
@@ -183,7 +184,9 @@ namespace fmlbase{
 
         // residue norm / sqrt(n)
         double eval(int lambdaIdx) override; // for training data
+        double eval() override{ eval(-1); } // for training data
         double eval(const MatrixXd &newX, const MatrixXd &targetY, int lambdaIdx);
+        double eval(const MatrixXd &newX, const MatrixXd &targetY){ eval(newX, targetY, -1); }
     };
 } // namespace fmlbase
 

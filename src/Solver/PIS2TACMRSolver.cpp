@@ -15,14 +15,14 @@ namespace fmlbase {
     VectorXd PIS2TACMRSolver::predict(int lambdaIdx, int responseIdx) {
         if(lambdaIdx == -1)
             lambdaIdx = nlambda-1;
-        auto newY = (*design_mat)*((*thetas[lambdaIdx])->segment(responseIdx * nfeature, nfeature));
+        auto newY = (*design_mat)*((*thetas[lambdaIdx]).segment(responseIdx * nfeature, nfeature));
         return newY;
     }
 
     VectorXd PIS2TACMRSolver::predict(const MatrixXd &newX, int lambdaIdx, int responseIdx) {
         if(lambdaIdx == -1)
             lambdaIdx = nlambda-1;
-        auto newY = newX*((*thetas[lambdaIdx])->segment(responseIdx * nfeature, nfeature));
+        auto newY = newX*((*thetas[lambdaIdx]).segment(responseIdx * nfeature, nfeature));
         return newY;
     }
 
@@ -31,7 +31,7 @@ namespace fmlbase {
             lambdaIdx = nlambda-1;
         double error = 0;
         for (int i = 0; i < nresponse; ++i) {
-            auto newY = (*design_mat)*((*thetas[lambdaIdx])->segment(i * nfeature, nfeature));
+            auto newY = (*design_mat)*((*thetas[lambdaIdx]).segment(i * nfeature, nfeature));
             auto diff = newY - (response_vec->segment(i * nfeature, nfeature));
             error += diff.squaredNorm();
         }
@@ -43,7 +43,7 @@ namespace fmlbase {
             lambdaIdx = nlambda-1;
         double error = 0;
         for (int i = 0; i < nresponse; ++i) {
-            auto newY = newX*((*thetas[lambdaIdx])->segment(i * nfeature, nfeature));
+            auto newY = newX*((*thetas[lambdaIdx]).segment(i * nfeature, nfeature));
             auto diff = newY - targetY.col(i);
             error += diff.squaredNorm();
         }
