@@ -103,7 +103,7 @@ int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/Synthetic_CMR");
+        runCLITask("./Tasks/DrivFace_CMR");
     else
         runCLITask(argv[1]);
 

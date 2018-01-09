@@ -46,6 +46,9 @@ fmlbase.exe
 #ignore large data
 *.log
 Tasks/Synthetic/*.csv
+Tasks/DrivFace_CMR/*
+!Tasks/DrivFace_CMR/Readme.md
+!Tasks/DrivFace_CMR/config.txt
 Tasks/DrivFace/*
 !Tasks/DrivFace/Readme.md
 !Tasks/DrivFace/config.txt

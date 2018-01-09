@@ -12,12 +12,12 @@ outputformat = csv
 
 epsilon = 0.0001
 #niter >= 2; the 1st iteration is related to the trivial solution, 0. So the number of the stage equals niter-1
-niter = 31
+niter = 11
 #sigma depends on the data set: 0.1 0.5 1.0 2.0
 sigma = 1.0
 verbose = 0         #0 or 1
 stepsize_scale = 50
 
-nexp=5
+nexp=100
 # lasso or sqrtlasso
 algorithm = CMR

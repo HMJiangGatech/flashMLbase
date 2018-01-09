@@ -33,7 +33,7 @@ namespace fmlbase{
         if(solver_param->hasArg("minlambda_ratio"))
             min_lambda_ratio = solver_param->getDoubleArg("minlambda_ratio");
         else
-            min_lambda_ratio = sqrt(log(nparameter)/ntrain_sample) / lambdas[0];   //! different from the paper
+            min_lambda_ratio = sqrt(log(nfeature)/ntrain_sample) / lambdas[0];   //! different from the paper
         //std::cout<<min_lambda_ratio<<std::endl;
         double anneal_lambda = pow(min_lambda_ratio,1./(niter-1));
         for (int i = 1; i < niter; ++i) {

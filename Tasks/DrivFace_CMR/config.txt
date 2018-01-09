@@ -1,0 +1,16 @@
+# all have to be lower case. 
+
+traindata = trainX.csv
+trainlebel = trainY.csv
+testdata = testX.csv
+testlabel = testY.csv
+inputformat = csv
+outputformat = csv
+
+niter = 50
+sigma = 0.3
+verbose = 0         #0 or 1
+stepsize_scale = 10
+
+nexp=10
+algorithm = CMR

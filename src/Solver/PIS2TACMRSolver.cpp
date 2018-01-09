@@ -34,7 +34,6 @@ namespace fmlbase {
             auto newY = (*design_mat)*((*thetas[lambdaIdx]).segment(i * nfeature, nfeature));
             auto diff = newY - (response_vec->segment(i * ntrain_sample, ntrain_sample));
             error += diff.squaredNorm();
-            std::cout << error << std::endl;
         }
         return sqrt(error/ntrain_sample);
     }

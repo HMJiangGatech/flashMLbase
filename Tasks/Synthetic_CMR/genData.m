@@ -2,18 +2,14 @@ rng shuffle
 
 n = 200;
 d = 2000;
-nr = 3;
-sigma = 1.0;
+nr = 2;
+sigma = 1;
 var = eye(d)*0.5 + 0.5;
 mu = randn(1,d)*0;
 beta = zeros(d,nr);
 beta(1,1) = 3;
 beta(2,1) = -2;
 beta(4,1) = 1.5;
-% beta(1,2) = 2;
-% beta(3,2) = -1;
-% beta(1,3) = 3;
-% beta(4,3) = -3;
 % beta(randperm(d,d/10*8)) = beta(randperm(d,d/10*8))*0;
 
 
