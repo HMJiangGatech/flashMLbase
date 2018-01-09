@@ -165,7 +165,7 @@ namespace fmlbase{
     }
 
     double PIS2TASQRTLassoSolver::eval() {
-        eval(-1);
+        return eval(-1);
     }
 
     double PIS2TASQRTLassoSolver::eval(int lambdaIdx) {
@@ -177,7 +177,7 @@ namespace fmlbase{
     }
 
     double PIS2TASQRTLassoSolver::eval(const MatrixXd &newX, const VectorXd &targetY) {
-        eval(newX,targetY,-1);
+        return eval(newX,targetY,-1);
     }
 
     double PIS2TASQRTLassoSolver::eval(const MatrixXd &newX, const VectorXd &targetY, int lambdaIdx) {

@@ -34,8 +34,9 @@ namespace fmlbase {
             auto newY = (*design_mat)*((*thetas[lambdaIdx]).segment(i * nfeature, nfeature));
             auto diff = newY - (response_vec->segment(i * ntrain_sample, ntrain_sample));
             error += diff.squaredNorm();
+            std::cout << error << std::endl;
         }
-        return error;
+        return sqrt(error/ntrain_sample);
     }
 
     double PIS2TACMRSolver::eval(const MatrixXd &newX, const MatrixXd &targetY, int lambdaIdx) {
@@ -47,7 +48,7 @@ namespace fmlbase {
             auto diff = newY - targetY.col(i);
             error += diff.squaredNorm();
         }
-        return error;
+        return sqrt(error/newX.rows());
     }
 
 
