@@ -56,7 +56,7 @@ namespace fmlbase{
                 objval += ((response_vec->segment(i * ntrain_sample, ntrain_sample)) -
                            (*design_mat) * (theta_t->segment(i * nfeature, nfeature))).norm() *
                           sqrt_ntrain_sample_inv;
-                regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
+                regvec += theta_t->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
 
             objval += lambda*regvec.cwiseSqrt().sum();
@@ -129,10 +129,10 @@ namespace fmlbase{
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
                 regvec += theta_t->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
-            regvec = lambda*regvec.cwiseSqrt();
+            regvec = regvec.cwiseSqrt();
             //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += ((theta_t->segment(i * nfeature, nfeature).array() /
+                grad.segment(i * nfeature, nfeature) += lambda*((theta_t->segment(i * nfeature, nfeature).array() /
                                                           (regvec.array() + 0.0000000001)) *
                                                          regvec.cwiseSign().cwiseAbs().array()).matrix();
             }
@@ -150,11 +150,10 @@ namespace fmlbase{
                 grad.segment(i * nfeature, nfeature) /= sqrt_ntrain_sample * residue.norm();
                 regvec += theta->segment(i * nfeature, nfeature).array().pow(2).matrix();
             }
-            regvec = lambda*regvec.cwiseSqrt();
-            //std::cout << regvec << std::endl;
+            regvec = regvec.cwiseSqrt();
             //#pragma omp parallel for
             for (int i = 0; i < nresponse; ++i) {
-                grad.segment(i * nfeature, nfeature) += ((theta->segment(i * nfeature, nfeature).array() /
+                grad.segment(i * nfeature, nfeature) += lambda*((theta->segment(i * nfeature, nfeature).array() /
                                                           (regvec.array() + 0.0000000001)) *
                                                          regvec.cwiseSign().cwiseAbs().array()).matrix();
             }

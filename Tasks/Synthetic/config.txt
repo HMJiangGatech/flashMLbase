@@ -21,4 +21,4 @@ stepsize_scale = 50
 
 nexp=5
 # lasso or sqrtlasso
-algorithm = lasso
+algorithm = sqrtlasso

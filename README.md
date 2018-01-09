@@ -6,6 +6,8 @@ A lightweight reusable C++ Machine Learning Code Base. It is built upon Eigen, w
 
 **PIS$^2$TA**: PISTA for SQRT Lasso
 
+**CMR**: Calibrated Multivariate Regression
+
 ## Usage
 An example of synthetic data is in `Tasks\Synthetic\`
 

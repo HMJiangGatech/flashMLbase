@@ -33,7 +33,7 @@ namespace fmlbase{
         if(solver_param->hasArg("minlambda_ratio"))
             min_lambda_ratio = solver_param->getDoubleArg("minlambda_ratio");
         else
-            min_lambda_ratio = sqrt(log(nfeature)/ntrain_sample) / lambdas[0];   //! different from the paper
+            min_lambda_ratio = sqrt(log(nparameter)/ntrain_sample) / lambdas[0];   //! different from the paper
         //std::cout<<min_lambda_ratio<<std::endl;
         double anneal_lambda = pow(min_lambda_ratio,1./(niter-1));
         for (int i = 1; i < niter; ++i) {
@@ -110,6 +110,7 @@ namespace fmlbase{
                 temp_theta = *theta - grad/tilde_stepsize;
                 temp_theta = temp_theta.cwiseSign().cwiseProduct((temp_theta.array().abs() - tau).max(0).matrix());
                 double q_val = this->q_value(temp_theta,grad,tilde_stepsize,loss);
+
                 //std::cout <<"\t\tobj val :" << obj_value(&temp_theta) << " quadratic approximation: " << q_val<<std::endl;
                 if (obj_value(&temp_theta) < q_val)
                     tilde_stepsize *= 0.5;
