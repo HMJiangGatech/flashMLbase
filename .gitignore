@@ -57,3 +57,6 @@ Tasks/GHG/ghg_data
 !Tasks/GHG/Readme.md
 !Tasks/GHG/config.txt
 Tasks/Synthetic_CMR/*.csv
+*.csv
+*.mat
+*.zip
