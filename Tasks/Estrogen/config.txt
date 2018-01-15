@@ -1,0 +1,13 @@
+# all have to be lower case. 
+
+traindata = S.csv
+inputformat = csv
+outputformat = csv
+
+niter = 50
+sigma = 0.3
+verbose = 0         #0 or 1
+stepsize_scale = 50
+
+nexp=10
+algorithm = SPME
