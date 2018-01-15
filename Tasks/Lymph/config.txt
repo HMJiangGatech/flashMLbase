@@ -1,0 +1,18 @@
+# all have to be lower case. 
+
+data = data.csv
+inputformat = csv
+outputformat = csv
+
+
+# 0.1/0.01/0.001
+minlambda_ratio = 0.1
+niter = 10
+sigma = 0.3
+verbose = 0         #0 or 1
+stepsize_scale = 10000
+max_iter = 100
+#epsilon = 0.1
+
+nexp=1
+algorithm = SPME

@@ -1,13 +1,17 @@
 # all have to be lower case. 
 
-data = S.csv
+data = data.csv
 inputformat = csv
 outputformat = csv
 
-niter = 50
+#0.33/0.06/0.03
+minlambda_ratio = 0.03
+niter = 10
 sigma = 0.3
 verbose = 0         #0 or 1
-stepsize_scale = 50
+stepsize_scale = 10000
+max_iter = 100
+#epsilon = 0.1
 
-nexp=10
+nexp=1
 algorithm = SPME

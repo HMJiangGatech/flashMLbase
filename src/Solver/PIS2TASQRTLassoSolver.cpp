@@ -25,6 +25,11 @@ namespace fmlbase{
         else
             niter = 100;
 
+        if(solver_param->hasArg("max_iter"))
+            max_iter = solver_param->getIntArg("max_iter");
+        else
+            max_iter = 10000;
+
         // initializing lambdas
         lambda = 0;
         lambdas = new double[niter];
@@ -146,6 +151,12 @@ namespace fmlbase{
             //std::cout<<loss_value()*loss_value()<<std::endl;
             if(omega <= k_epsilon)
                 break;
+            if(t > max_iter)
+            {
+                if(verbose)
+                    std::cout << "reach max_iter \n";
+                break;
+            }
         }
     }
 

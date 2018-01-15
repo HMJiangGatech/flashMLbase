@@ -147,6 +147,7 @@ namespace fmlbase{
         double* lambdas;                // The regularization parameters sequence on the path.
         double stepsize_max;            // The max step size parameter for the inner loop (backtracking line search)
         double epsilon;                 // The specified precision
+        long long int max_iter;         // Maximum iteration for all the inner loops.
     };
 } // namespace fmlbase
 

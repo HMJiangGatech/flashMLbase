@@ -92,32 +92,37 @@ void runCLITask(const std::string &task_path)
     if(param.getStrArg("algorithm") == "SPME") {
         MatrixXd* S;
         fmlbase::utils::readCsvMat(S, param.getStrArg("rootpath") + "/"+param.getStrArg("data"));
-        auto nfeature = S->rows();
+        auto nfeature = S->cols();
         vector<fmlbase::PIS2TASQRTLassoSolver*> solver_vec;
         for (int j = 0; j < nfeature; ++j) {
-            auto temp_row = S->row(0);
-            S->row(0) = S->row(j);
-            S->row(j) = temp_row;
-            fmlbase::PIS2TASQRTLassoSolver *new_solver = new fmlbase::PIS2TASQRTLassoSolver(param, S->bottomRows(nfeature-1), S->row(0));
+            auto temp_col = S->col(0);
+            S->col(0) = S->col(j);
+            S->col(j) = temp_col;
+            fmlbase::PIS2TASQRTLassoSolver *new_solver = new fmlbase::PIS2TASQRTLassoSolver(param, S->rightCols(nfeature-1), S->col(0));
             new_solver->initialize();
             solver_vec.push_back(new_solver);
         }
-
+        cout << "Construction Completed \n";
         for (int i = 0; i < param.getIntArg("nexp"); ++i) {
             for (int j = 0; j < nfeature; ++j)
                 solver_vec[j]->reinitialize();
             auto begin = std::chrono::steady_clock::now();
             for (int j = 0; j < nfeature; ++j)
+            {
                 solver_vec[j]->train();
+                cout << "trained"<<j<<"th solver \n";
+            }
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
             times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
         }
-        int non_zeros = 0;
+        int num_zeros = 0;
         for (int j = 0; j < nfeature; ++j)
-            non_zeros += ((*(solver_vec[j]->theta)).array()==0).sum();
-        cout << "Sparsity: " << 1.*non_zeros/nfeature/nfeature << endl;
+        {
+            num_zeros += ((*(solver_vec[j]->theta)).array().abs()<=0.00001).count();
+        }
+        cout << "Sparsity: " << 1-1.*num_zeros/nfeature/(nfeature-1) << endl;
 
     }
 
@@ -134,7 +139,7 @@ int main(int argc, const char * argv[])
 {
 
     if(argc < 2)
-        runCLITask("./Tasks/Estrogen");
+        runCLITask("./Tasks/Arabidopsis");
     else
         runCLITask(argv[1]);
 

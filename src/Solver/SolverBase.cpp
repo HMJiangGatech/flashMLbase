@@ -33,7 +33,7 @@ namespace fmlbase{
         } else throw std::runtime_error("Input data format: " +param.getStrArg("inputformat")+ "is not supported\n");
 
         if (ntrain_sample != design_mat->rows())
-            throw std::runtime_error("Size of input data and label foes not match\n");
+            throw std::runtime_error("Size of input data and label does not match\n");
 
         nfeature = design_mat->cols();
         nparameter = nfeature*nresponse;
@@ -52,7 +52,7 @@ namespace fmlbase{
         } else throw std::runtime_error("Input data format: " +param.getStrArg("inputformat")+ "is not supported\n");
 
         if (ntrain_sample != this->design_mat->rows())
-            throw std::runtime_error("Size of input data and label foes not match\n");
+            throw std::runtime_error("Size of input data and label does not match\n");
 
         nfeature = this->design_mat->cols();
         nparameter = nfeature*nresponse;
