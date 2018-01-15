@@ -8,7 +8,10 @@
 namespace fmlbase{
 
     PIS2TASQRTLassoSolver::PIS2TASQRTLassoSolver(const utils::FmlParam &param) : SolverBase(param), nlambda(niter) {
-        //this->initialize();
+    }
+    PIS2TASQRTLassoSolver::PIS2TASQRTLassoSolver(const utils::FmlParam &param, const MatrixXd &design_mat,
+                                                 const VectorXd &response_vec) : SolverBase(param, design_mat,
+                                                                                            response_vec), nlambda(niter) {
     }
 
     void PIS2TASQRTLassoSolver::initialize() {
@@ -207,6 +210,7 @@ namespace fmlbase{
             lambdaIdx = nlambda-1;
         return (trueTheta - (*thetas[lambdaIdx])).norm();
     }
+
 
 
 } // namespace fmlbase

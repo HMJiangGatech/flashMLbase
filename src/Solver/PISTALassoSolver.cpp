@@ -7,6 +7,11 @@
 namespace fmlbase{
     PISTALassoSolver::PISTALassoSolver(const fmlbase::utils::FmlParam &param) : PIS2TASQRTLassoSolver(param) {
     }
+    PISTALassoSolver::PISTALassoSolver(const utils::FmlParam &param, const MatrixXd &design_mat,
+                                       const VectorXd &response_vec) : PIS2TASQRTLassoSolver(param, design_mat,
+                                                                                             response_vec) {
+
+    }
     void PISTALassoSolver::initialize() {
 
         theta = new VectorXd(nparameter);
@@ -48,6 +53,7 @@ namespace fmlbase{
     void PISTALassoSolver::reinitialize() {
         PIS2TASQRTLassoSolver::reinitialize();
     }
+
 
 
 }// namespace fmlbase

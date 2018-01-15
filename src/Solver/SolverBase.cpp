@@ -43,6 +43,25 @@ namespace fmlbase{
         else
             verbose = false;
     }
+    SolverBase::SolverBase(const utils::FmlParam &param, const MatrixXd &design_mat, const VectorXd &response_vec) : solver_param(&param) {
+        if (param.getStrArg("inputformat") == "csv"){
+            this->design_mat = new MatrixXd(design_mat);
+            this->response_vec = new VectorXd(response_vec);
+            nresponse = 1;
+            ntrain_sample = this->response_vec->size();
+        } else throw std::runtime_error("Input data format: " +param.getStrArg("inputformat")+ "is not supported\n");
+
+        if (ntrain_sample != this->design_mat->rows())
+            throw std::runtime_error("Size of input data and label foes not match\n");
+
+        nfeature = this->design_mat->cols();
+        nparameter = nfeature*nresponse;
+
+        if(param.hasArg("verbose"))
+            verbose = param.getBoolArg("verbose");
+        else
+            verbose = false;
+    }
 
     void SolverBase::saveMatParam(const MatrixXd &parameter) {
         if (solver_param->getStrArg("outputformat") == "csv"){
@@ -55,4 +74,5 @@ namespace fmlbase{
             fmlbase::utils::writeCsvVec(parameter,solver_param->getStrArg("rootpath")+"/"+solver_param->getStrArg("savepath_theta"));
         } else throw std::runtime_error("Output data format: " +solver_param->getStrArg("outputformat")+ "is not supported\n");
     }
+
 } // namespace fmlbase

@@ -17,6 +17,7 @@ namespace fmlbase{
     class PISTALassoSolver: public PIS2TASQRTLassoSolver {
     public:
         explicit PISTALassoSolver(const utils::FmlParam &param);
+        PISTALassoSolver(const utils::FmlParam &param, const MatrixXd &design_mat, const VectorXd &response_vec);
         void initialize() override;
         void reinitialize() override;
 

@@ -19,6 +19,7 @@ namespace fmlbase{
     class PIS2TASQRTLassoSolver : public SolverBase {
     public:
         explicit PIS2TASQRTLassoSolver(const utils::FmlParam &param);
+        PIS2TASQRTLassoSolver(const utils::FmlParam &param, const MatrixXd &design_mat, const VectorXd &response_vec);
         virtual void initialize();
         ~PIS2TASQRTLassoSolver();
         virtual void reinitialize();
