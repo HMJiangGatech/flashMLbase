@@ -6,7 +6,7 @@ outputformat = csv
 
 
 # 0.1/0.01/0.001
-minlambda_ratio = 0.1
+minlambda_ratio = 0.001
 niter = 10
 sigma = 0.3
 verbose = 0         #0 or 1

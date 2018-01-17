@@ -94,6 +94,7 @@ void runCLITask(const std::string &task_path)
         fmlbase::utils::readCsvMat(S, param.getStrArg("rootpath") + "/"+param.getStrArg("data"));
         auto nfeature = S->cols();
         vector<fmlbase::PIS2TASQRTLassoSolver*> solver_vec;
+        double errors = 0;
         for (int j = 0; j < nfeature; ++j) {
             auto temp_col = S->col(0);
             S->col(0) = S->col(j);
@@ -110,12 +111,15 @@ void runCLITask(const std::string &task_path)
             for (int j = 0; j < nfeature; ++j)
             {
                 solver_vec[j]->train();
-                cout << "trained"<<j<<"th solver \n";
+                //cout << "trained"<<j<<"th solver \n";
             }
             auto end = std::chrono::steady_clock::now();
             auto diff = 1. * (end - begin).count() * nanoseconds::period::num / nanoseconds::period::den;
             times.emplace_back(diff);
             cout << i << "th trail, training time (/s): " << diff << endl;
+            errors = 0;
+            for (int j = 0; j < nfeature; ++j)
+                errors+=solver_vec[j]->eval();
         }
         int num_zeros = 0;
         for (int j = 0; j < nfeature; ++j)
@@ -123,6 +127,7 @@ void runCLITask(const std::string &task_path)
             num_zeros += ((*(solver_vec[j]->theta)).array().abs()<=0.00001).count();
         }
         cout << "Sparsity: " << 1-1.*num_zeros/nfeature/(nfeature-1) << endl;
+        cout << "Errors: " << errors << endl;
 
     }
 
